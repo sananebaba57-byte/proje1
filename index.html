@@ -3,82 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sahmed | Profil</title>
+    <title>Sahmed | Linkler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* --- CSS (TASARIM) KISMI --- */
+        /* --- MODERN CSS TASARIM --- */
         body {
-            background-color: #121212; /* Koyu Arka Plan */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Havalı mor-siyah geçiş */
+            font-family: 'Segoe UI', sans-serif;
             color: white;
             display: flex;
-            justify_content: center;
+            justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            overflow: hidden; /* Kaydırma çubuklarını gizle */
         }
+
         .kart {
-            background-color: #1e1e1e;
-            width: 300px;
+            background: rgba(255, 255, 255, 0.05); /* Şeffaf beyaz */
+            backdrop-filter: blur(15px); /* Buzlu cam efekti */
+            -webkit-backdrop-filter: blur(15px);
+            width: 320px;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 25px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 2px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            
+            /* Animasyon: Sayfa açılınca yukarıdan aşağı kaysın */
+            animation: girisEfekti 1s ease-out;
         }
-        .profil-resmi {
-            width: 120px;
-            height: 120px;
-            background-color: #333;
-            border-radius: 50%; /* Yuvarlak yapar */
+
+        /* Profil Resmi Alanı */
+        .profil-cerceve {
+            width: 130px;
+            height: 130px;
             margin: 0 auto 20px;
+            border-radius: 50%;
+            padding: 5px;
+            /* GS Renklerinde dönen çerçeve efekti */
+            background: linear-gradient(45deg, #A90432, #FDB912); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profil-resmi {
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e1e;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
-            border: 3px solid #A90432; /* GS Kırmızısı Çerçeve */
+            font-size: 60px;
+            overflow: hidden; /* Resim taşarsa gizle */
         }
-        h1 {
-            margin: 10px 0 5px;
-            font-size: 24px;
+        
+        /* Eğer gerçek resim koyarsan bu class'ı kullanırsın */
+        .profil-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
-        p {
-            color: #bbb;
-            margin: 0 0 25px;
-            font-size: 14px;
-        }
-        .buton {
-            display: block;
-            background-color: #A90432; /* GS Kırmızısı */
-            color: #FDB912; /* GS Sarısı */
+
+        h1 { margin: 10px 0 5px; font-size: 26px; letter-spacing: 1px; }
+        p { color: #ccc; margin-bottom: 30px; font-size: 14px; font-weight: 300; }
+
+        /* Link Butonları */
+        .link-kutusu {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 12px;
             text-decoration: none;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
-        .buton:hover {
-            background-color: #d60642; /* Üzerine gelince açılan renk */
-            transform: scale(1.05); /* Hafif büyüme efekti */
+
+        .link-kutusu:hover {
+            background: rgba(169, 4, 50, 0.2); /* Üzerine gelince hafif kırmızı */
+            border-color: #FDB912; /* GS Sarısı kenarlık */
+            transform: translateX(5px); /* Hafif sağa kayma */
         }
+
+        .ikon {
+            font-size: 24px;
+            margin-right: 15px;
+            width: 30px;
+        }
+
         .footer {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #555;
+            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Animasyon Tanımı */
+        @keyframes girisEfekti {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
     <div class="kart">
-        <div class="profil-resmi">⚡</div> <h1>Sahmed</h1>
-        <p>Elektrik Mühendisliği Öğrencisi 🎓<br>Kocaeli Üniversitesi</p>
+        <div class="profil-cerceve">
+            <div class="profil-resmi">
+                ⚡
+            </div>
+        </div>
+        
+        <h1>Sahmed</h1>
+        <p>Elektrik Mühendisliği | Kocaeli Üni.<br>Software & Circuit Design</p>
 
-        <a href="https://www.instagram.com/menestekin909/" class="buton" target="_blank">Instagram'da Takip Et</a>
-        <a href="mailto:sahmed@email.com" class="buton">Bana Mail At</a>
+        <a href="https://www.instagram.com/menestekin909/" class="link-kutusu" target="_blank">
+            <i class="fab fa-instagram ikon" style="color: #E1306C;"></i>
+            <span>Instagram'da Takip Et</span>
+        </a>
+
+        <a href="mailto:sahmed@email.com" class="link-kutusu">
+            <i class="fas fa-envelope ikon" style="color: #FDB912;"></i>
+            <span>Bana Mail Gönder</span>
+        </a>
+
+        <a href="https://github.com" class="link-kutusu" target="_blank">
+            <i class="fab fa-github ikon" style="color: white;"></i>
+            <span>GitHub Projelerim</span>
+        </a>
         
         <div class="footer">
-            Python & Code by Sahmed
+            Designed by Sahmed © 2025
         </div>
     </div>
 

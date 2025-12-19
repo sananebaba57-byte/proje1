@@ -3,294 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muhammed Enes | Portfolio</title>
+    <title>Muhammed Enes | Profil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- TEMEL AYARLAR --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+        /* --- GENEL AYARLAR --- */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #0b0c10; /* Derin Siyah */
-            color: #c5c6c7;
-            overflow: hidden; /* Kaydırma yok */
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a; /* Koyu Gri Zemin */
+            color: white;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden; /* Taşmaları gizle */
+            position: relative;
         }
 
-        /* Arka Plandaki Hareketli Ağ (Canvas) */
-        canvas {
+        /* --- ARKA PLAN RESİMLERİ (TESLA & ICARDI) --- */
+        .bg-img {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* En arkada */
+            bottom: 0;
+            height: 90vh; /* Ekranın %90'ı kadar yükseklik */
+            opacity: 0.8; /* Hafif şeffaflık */
+            z-index: 1;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
         }
 
-        /* --- ANA KART --- */
+        /* Tesla Solda */
+        .tesla {
+            left: -50px;
+            filter: grayscale(100%); /* Siyah Beyaz olsun */
+        }
+
+        /* Icardi Sağda */
+        .icardi {
+            right: -50px;
+        }
+
+        /* --- ORTA KART --- */
         .kart {
             position: relative;
-            z-index: 10; /* Canvas'ın üstünde */
-            background: rgba(31, 40, 51, 0.7); /* Yarı saydam koyu gri */
-            backdrop-filter: blur(10px);
-            width: 350px;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #45a29e; /* Neon Turkuaz Çerçeve */
-            box-shadow: 0 0 20px rgba(69, 162, 158, 0.4);
+            z-index: 10; /* Resimlerin üstünde duracak */
+            background: rgba(20, 20, 20, 0.85); /* Çok koyu cam */
+            backdrop-filter: blur(20px);
+            width: 340px;
+            padding: 40px 30px;
+            border-radius: 30px;
             text-align: center;
-            opacity: 0;
-            transition: opacity 1s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            
+            /* Kart Animasyonu */
+            animation: kartGelis 1s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .kart-gorunur { opacity: 1 !important; }
-
-        /* Profil Resmi */
-        .profil-cerceve {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
+        .profil-img-kutu {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
             border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(135deg, #A90432, #FDB912); /* GS Renkleri */
-            box-shadow: 0 0 15px #A90432;
+            padding: 4px;
+            /* GS Degrade Çerçeve */
+            background: linear-gradient(to right, #A90432, #FDB912);
+            box-shadow: 0 0 20px rgba(169, 4, 50, 0.6);
         }
-        .profil-resmi {
+
+        .profil-img {
             width: 100%;
             height: 100%;
-            background: #111;
             border-radius: 50%;
+            background: #222;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
-        }
-
-        h1 { color: #fff; margin: 10px 0; letter-spacing: 1px; }
-        
-        /* Hacker Yazı Efekti Alanı */
-        .typing-text {
-            color: #66fcf1; /* Neon Mavi */
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            font-size: 14px;
-            min-height: 20px;
-            margin-bottom: 25px;
-        }
-
-        /* --- YETENEK ÇUBUKLARI --- */
-        .skills-container { text-align: left; margin-bottom: 25px; }
-        .skill-box { margin-bottom: 10px; }
-        .skill-name { font-size: 12px; color: #fff; display: flex; justify-content: space-between; }
-        .progress-bar {
-            height: 6px;
-            background: #333;
-            border-radius: 3px;
-            margin-top: 3px;
+            font-size: 60px;
             overflow: hidden;
         }
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #A90432, #FDB912); /* GS */
-            width: 0%; /* JS ile dolacak */
-            transition: width 1.5s ease-in-out;
-        }
 
-        /* --- BUTONLAR --- */
-        .link-btn {
+        h1 { margin: 10px 0 5px; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+        .unvan { color: #aaa; font-size: 14px; margin-bottom: 30px; font-weight: 300; }
+        .gs-text { color: #FDB912; font-weight: bold; }
+
+        /* BUTONLAR */
+        .btn {
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: transparent;
-            border: 1px solid #66fcf1;
-            color: #66fcf1;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
+            background: white;
+            color: #1a1a1a;
+            padding: 14px 20px;
+            margin-bottom: 12px;
+            border-radius: 12px;
             text-decoration: none;
-            transition: 0.3s;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
-        .link-btn:hover {
-            background: #66fcf1;
-            color: #0b0c10;
-            box-shadow: 0 0 15px #66fcf1; /* Neon Parlama */
-        }
-        
-        /* Instagram ve Mail için özel renkler */
-        .btn-insta:hover { background: #E1306C; color: white; border-color: #E1306C; box-shadow: 0 0 15px #E1306C; }
-        .btn-mail:hover { background: #FDB912; color: black; border-color: #FDB912; box-shadow: 0 0 15px #FDB912; }
+        .btn i { margin-right: 15px; font-size: 20px; }
 
-        /* --- INTRO EKRANI --- */
-        #intro {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: top 0.8s ease;
+        /* Buton Renkleri */
+        .btn-instagram:hover { background: #E1306C; color: white; transform: translateY(-3px); }
+        .btn-mail:hover { background: #FDB912; color: #1a1a1a; transform: translateY(-3px); }
+        .btn-github:hover { background: #333; color: white; border-color: white; transform: translateY(-3px); }
+
+        /* --- MOBİL UYUMLULUK (TELEFON İÇİN) --- */
+        @media screen and (max-width: 800px) {
+            /* Mobilde resimleri biraz geri plana atalım ki yazı okunsun */
+            .bg-img {
+                height: 50vh; /* Boyutu küçült */
+                opacity: 0.2; /* İyice silikleştir */
+            }
+            .tesla { left: -80px; top: 0; bottom: auto; } /* Tesla üstte */
+            .icardi { right: -80px; bottom: 0; } /* Icardi altta */
         }
-        .start-btn {
-            padding: 15px 50px;
-            font-size: 20px;
-            background: transparent;
-            color: #66fcf1;
-            border: 2px solid #66fcf1;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
-        }
-        .start-btn:hover {
-            background: #66fcf1;
-            color: #000;
-            box-shadow: 0 0 40px #66fcf1;
+
+        @keyframes kartGelis {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="networkCanvas"></canvas>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="bg-img tesla" alt="Nikola Tesla">
 
-    <div id="intro">
-        <h2 style="color:white; font-weight:100; margin-bottom:30px;">MUHAMMED ENES</h2>
-        <button class="start-btn" onclick="baslat()">SİSTEME GİR</button>
-    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="bg-img icardi" alt="Mauro Icardi">
 
-    <div class="kart" id="profilKart">
-        <div class="profil-cerceve">
-            <div class="profil-resmi">⚡</div>
+    <div class="kart">
+        <div class="profil-img-kutu">
+            <div class="profil-img">🦁</div>
         </div>
-        
+
         <h1>Muhammed Enes</h1>
-        
-        <div class="typing-text" id="typewriter"></div>
-
-        <div class="skills-container">
-            <div class="skill-box">
-                <div class="skill-name"><span>Python / Yapay Zeka</span><span>85%</span></div>
-                <div class="progress-bar"><div class="progress" style="width: 85%"></div></div>
-            </div>
-            <div class="skill-box">
-                <div class="skill-name"><span>Elektrik Devreleri</span><span>90%</span></div>
-                <div class="progress-bar"><div class="progress" style="width: 90%"></div></div>
-            </div>
-            <div class="skill-box">
-                <div class="skill-name"><span>MATLAB & Proteus</span><span>75%</span></div>
-                <div class="progress-bar"><div class="progress" style="width: 75%"></div></div>
-            </div>
+        <div class="unvan">
+            Elektrik Mühendisi Adayı ⚡<br>
+            Kocaeli Üniversitesi
         </div>
 
-        <a href="https://www.instagram.com/menestekin909/" class="link-btn btn-insta" target="_blank">
-            <i class="fab fa-instagram" style="margin-right:10px;"></i> Instagram
+        <a href="https://www.instagram.com/menestekin909/" class="btn btn-instagram" target="_blank">
+            <i class="fab fa-instagram"></i> Instagram
         </a>
-        <a href="mailto:menestekin10@gmail.com" class="link-btn btn-mail">
-            <i class="fas fa-envelope" style="margin-right:10px;"></i> Mail Gönder
+
+        <a href="mailto:menestekin10@gmail.com" class="btn btn-mail">
+            <i class="fas fa-envelope"></i> Mail Gönder
         </a>
-        <a href="https://github.com" class="link-btn">
-            <i class="fab fa-github" style="margin-right:10px;"></i> GitHub Projelerim
+
+        <a href="https://github.com" class="btn btn-github" target="_blank">
+            <i class="fab fa-github"></i> GitHub
         </a>
+        
+        <p style="font-size:10px; color:#555; margin-top:20px;">
+            "Bilim solda, Aşk sağda."
+        </p>
     </div>
 
-    <script>
-        // --- 1. GİRİŞ FONKSİYONU ---
-        function baslat() {
-            document.getElementById('intro').style.top = '-100%';
-            setTimeout(() => {
-                document.getElementById('profilKart').classList.add('kart-gorunur');
-                yaziYaz(); // Kart açılınca yazı efekti başlasın
-            }, 500);
-        }
-
-        // --- 2. DAKTİLO EFEKTİ (TYPEWRITER) ---
-        const text = "Elektrik Mühendisi | Yazılımcı | Galatasaraylı";
-        let index = 0;
-        function yaziYaz() {
-            if (index < text.length) {
-                document.getElementById("typewriter").innerHTML += text.charAt(index);
-                index++;
-                setTimeout(yaziYaz, 50); // Hız ayarı
-            }
-        }
-
-        // --- 3. MATRIX ARKA PLAN ANİMASYONU ---
-        const canvas = document.getElementById('networkCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let particles = [];
-        const particleCount = 60; // Nokta sayısı
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 1; // Hız X
-                this.vy = (Math.random() - 0.5) * 1; // Hız Y
-                this.size = 2;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                // Kenara çarpınca geri dön
-                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
-                ctx.fillStyle = '#66fcf1'; // Neon Mavi Noktalar
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        // Noktaları oluştur
-        for(let i=0; i<particleCount; i++) particles.push(new Particle());
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Çizgileri ve Noktaları çiz
-            for(let i=0; i<particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                
-                // Yakın noktaları birleştir (Ağ efekti)
-                for(let j=i; j<particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if(distance < 150) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(102, 252, 241, ${1 - distance/150})`; // Uzaklaştıkça silikleş
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Ekran boyutu değişirse canvas'ı güncelle
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
 </body>
 </html>

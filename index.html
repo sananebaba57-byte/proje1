@@ -3,46 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sahmed | Linkler</title>
+    <title>Sahmed | Profil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- MODERN CSS TASARIM --- */
+        /* --- GENEL TASARIM --- */
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Havalı mor-siyah geçiş */
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             font-family: 'Segoe UI', sans-serif;
-            color: white;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Sayfa kaydırmayı engelle */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Kaydırma çubuklarını gizle */
         }
 
+        /* --- KARŞILAMA EKRANI (INTRO) --- */
+        #intro-perdesi {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111;
+            z-index: 999; /* En üstte durmasını sağlar */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: top 0.8s ease-in-out; /* Yukarı kayma hızı */
+        }
+
+        .intro-baslik {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: parlama 2s infinite alternate;
+        }
+
+        .giris-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            background: #A90432; /* GS Kırmızısı */
+            color: #FDB912; /* GS Sarısı */
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(169, 4, 50, 0.5);
+            transition: 0.3s;
+        }
+
+        .giris-btn:hover {
+            transform: scale(1.1);
+            background: #d60642;
+        }
+
+        /* --- ANA KART TASARIMI --- */
         .kart {
-            background: rgba(255, 255, 255, 0.05); /* Şeffaf beyaz */
-            backdrop-filter: blur(15px); /* Buzlu cam efekti */
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
             width: 320px;
             padding: 40px;
             border-radius: 25px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            
-            /* Animasyon: Sayfa açılınca yukarıdan aşağı kaysın */
-            animation: girisEfekti 1s ease-out;
+            opacity: 0; /* Başlangıçta gizli */
+            transition: opacity 1s ease 0.5s; /* Perde kalktıktan sonra görünsün */
         }
 
-        /* Profil Resmi Alanı */
+        .kart-gorunur {
+            opacity: 1 !important;
+        }
+
         .profil-cerceve {
             width: 130px;
             height: 130px;
             margin: 0 auto 20px;
             border-radius: 50%;
             padding: 5px;
-            /* GS Renklerinde dönen çerçeve efekti */
             background: linear-gradient(45deg, #A90432, #FDB912); 
             display: flex;
             justify-content: center;
@@ -58,21 +101,11 @@
             align-items: center;
             justify-content: center;
             font-size: 60px;
-            overflow: hidden; /* Resim taşarsa gizle */
-        }
-        
-        /* Eğer gerçek resim koyarsan bu class'ı kullanırsın */
-        .profil-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
         }
 
-        h1 { margin: 10px 0 5px; font-size: 26px; letter-spacing: 1px; }
-        p { color: #ccc; margin-bottom: 30px; font-size: 14px; font-weight: 300; }
+        h1 { color: white; margin: 10px 0 5px; font-size: 26px; }
+        p { color: #ccc; margin-bottom: 30px; font-size: 14px; }
 
-        /* Link Butonları */
         .link-kutusu {
             display: flex;
             align-items: center;
@@ -87,63 +120,63 @@
         }
 
         .link-kutusu:hover {
-            background: rgba(169, 4, 50, 0.2); /* Üzerine gelince hafif kırmızı */
-            border-color: #FDB912; /* GS Sarısı kenarlık */
-            transform: translateX(5px); /* Hafif sağa kayma */
+            background: rgba(169, 4, 50, 0.2);
+            border-color: #FDB912;
+            transform: translateX(5px);
         }
 
-        .ikon {
-            font-size: 24px;
-            margin-right: 15px;
-            width: 30px;
-        }
+        .ikon { font-size: 24px; margin-right: 15px; width: 30px; }
+        .footer { margin-top: 30px; font-size: 10px; color: #666; text-transform: uppercase; }
 
-        .footer {
-            margin-top: 30px;
-            font-size: 10px;
-            color: #666;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Animasyon Tanımı */
-        @keyframes girisEfekti {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes parlama {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #A90432; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #FDB912; }
         }
     </style>
 </head>
 <body>
 
-    <div class="kart">
+    <div id="intro-perdesi">
+        <h1 class="intro-baslik">Hoş Geldiniz</h1>
+        <button class="giris-btn" onclick="girisYap()">GİRİŞ YAP</button>
+    </div>
+
+    <div class="kart" id="ana-kart">
         <div class="profil-cerceve">
-            <div class="profil-resmi">
-                ⚡
-            </div>
+            <div class="profil-resmi">⚡</div>
         </div>
         
         <h1>Sahmed</h1>
-        <p>Elektrik Mühendisliği | Kocaeli Üni.<br>Software & Circuit Design</p>
+        <p>Elektrik Mühendisliği | Kocaeli Üni.<br>Devreler & Kodlar</p>
 
         <a href="https://www.instagram.com/menestekin909/" class="link-kutusu" target="_blank">
             <i class="fab fa-instagram ikon" style="color: #E1306C;"></i>
-            <span>Instagram'da Takip Et</span>
+            <span>Instagram</span>
         </a>
 
-        <a href="mailto:sahmed@email.com" class="link-kutusu">
+        <a href="mailto:menestekin10@gmail.com" class="link-kutusu">
             <i class="fas fa-envelope ikon" style="color: #FDB912;"></i>
-            <span>Bana Mail Gönder</span>
+            <span>Mail Gönder</span>
         </a>
 
         <a href="https://github.com" class="link-kutusu" target="_blank">
             <i class="fab fa-github ikon" style="color: white;"></i>
-            <span>GitHub Projelerim</span>
+            <span>GitHub</span>
         </a>
         
-        <div class="footer">
-            Designed by Sahmed © 2025
-        </div>
+        <div class="footer">Designed by Sahmed © 2025</div>
     </div>
+
+    <script>
+        // Giriş butonuna basılınca çalışacak kod
+        function girisYap() {
+            // Perdeyi yukarı kaydır
+            document.getElementById('intro-perdesi').style.top = '-100%';
+            
+            // Kartı görünür yap
+            document.getElementById('ana-kart').classList.add('kart-gorunur');
+        }
+    </script>
 
 </body>
 </html>

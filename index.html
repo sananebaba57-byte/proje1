@@ -2,310 +2,175 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYSTEM BREACHED | ERROR 404</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKED BY ENES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Share+Tech+Mono&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <style>
-        /* =================================================================
-           1. CORE & RESET
-           ================================================================= */
-        :root {
-            --hacker-green: #0f0;
-            --blood-red: #ff0000;
-            --dark-red: #4a0000;
-            --gs-yellow: #FDB912;
-            --bg-black: #000;
-        }
-
+        /* --- TEMEL AYARLAR --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; overflow: hidden; height: 100vh; font-family: 'Share Tech Mono', monospace; }
+        body { background-color: #000; color: #0f0; font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
-        /* =================================================================
-           2. HACKLENME EKRANI (KORKU BÖLÜMÜ)
-           ================================================================= */
-        #hack-screen {
+        /* --- 1. KORKU EKRANI (HACKED) --- */
+        #hacked-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
+            background-color: #000;
+            z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center;
-            animation: backgroundFlash 0.2s infinite; /* EKRAN YANIP SÖNER */
+            padding: 20px;
         }
 
-        .skull-icon {
-            font-size: 100px; color: var(--blood-red);
-            margin-bottom: 20px;
-            animation: shake 0.5s infinite; /* TİTREME EFEKTİ */
+        .skull {
+            font-size: 80px; color: red; margin-bottom: 20px;
+            animation: titreme 0.1s infinite;
         }
 
-        .glitch-text {
+        .big-text {
             font-family: 'Rubik Glitch', cursive;
-            font-size: 50px; color: var(--blood-red);
-            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #000;
-            margin: 10px 0;
+            font-size: 40px; color: red;
+            text-shadow: 2px 2px 0px white;
+            margin-bottom: 10px;
+        }
+
+        .small-text {
+            color: white; font-size: 14px; letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        /* RESTORE BUTONU (Sistemi Kurtar) */
+        .restore-btn {
+            padding: 15px 30px;
+            background: transparent;
+            color: #0f0; border: 2px solid #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px; cursor: pointer;
+            text-transform: uppercase;
+            animation: puls 1s infinite;
+        }
+        .restore-btn:hover { background: #0f0; color: #000; }
+
+        /* --- 2. ANA PROFİL EKRANI (NORMAL) --- */
+        #profile-screen {
+            display: none; /* Başlangıçta gizli */
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #111 0%, #000 100%);
             position: relative;
         }
 
-        .sub-text {
-            color: #fff; font-size: 20px; letter-spacing: 3px;
-            background: var(--blood-red); padding: 5px 20px;
-            font-weight: bold; margin-top: 20px;
+        /* Matrix Yağmuru */
+        #matrix-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.1; pointer-events: none;
         }
 
-        /* TİTREME VE FLAŞ ANİMASYONLARI */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        .card {
+            z-index: 10;
+            background: rgba(20,20,20,0.9);
+            border: 1px solid #0f0;
+            padding: 30px; border-radius: 10px;
+            text-align: center; width: 90%; max-width: 350px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
         }
 
-        @keyframes backgroundFlash {
-            0% { background-color: #000; }
-            50% { background-color: #1a0000; } /* Hafif kırmızı */
-            51% { background-color: #000; }
-            100% { background-color: #000; }
+        .profile-img {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 2px solid red; margin: 0 auto 15px;
+            background: #000; overflow: hidden;
         }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* =================================================================
-           3. ANA DASHBOARD (NORMAL SİTE)
-           ================================================================= */
-        #main-interface {
-            opacity: 0; transition: opacity 2s ease;
-            height: 100%; display: flex; flex-direction: column;
-            background: radial-gradient(circle, #111 0%, #000 100%);
-            position: relative; z-index: 10;
-        }
+        h1 { color: #fff; font-size: 22px; margin-bottom: 5px; }
+        p { color: #888; font-size: 12px; margin-bottom: 20px; }
 
-        /* Matrix Arka Plan */
-        #matrix-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; opacity: 0.2; pointer-events: none;
+        .btn {
+            display: block; background: #111; color: #0f0;
+            border: 1px solid #0f0; padding: 12px; margin-bottom: 10px;
+            text-decoration: none; transition: 0.3s;
         }
+        .btn:hover { background: #0f0; color: #000; }
 
-        /* Header */
-        .top-bar {
-            height: 60px; border-bottom: 2px solid var(--blood-red);
-            background: rgba(20,0,0,0.8); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; color: #fff; z-index: 100;
-        }
-        .hacker-name { font-family: 'Orbitron'; font-size: 18px; color: var(--blood-red); }
-        .hacker-name span { color: #fff; }
+        /* --- ANİMASYONLAR --- */
+        @keyframes titreme { 0% { transform: translate(1px, 1px); } 100% { transform: translate(-1px, -1px); } }
+        @keyframes puls { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); } }
 
-        /* İçerik */
-        .content {
-            flex: 1; overflow-y: auto; padding: 20px; position: relative; z-index: 10;
-        }
-
-        /* Kartlar */
-        .hacker-card {
-            background: rgba(20,20,20,0.8);
-            border: 1px solid #333;
-            border-left: 4px solid var(--blood-red);
-            padding: 20px; margin-bottom: 20px;
-            color: #ddd; position: relative; overflow: hidden;
-            transition: 0.3s;
-        }
-        .hacker-card:hover {
-            transform: translateX(10px);
-            border-color: var(--gs-yellow);
-            box-shadow: 0 0 15px rgba(253, 185, 18, 0.2);
-        }
-
-        .avatar-glitch {
-            width: 100px; height: 100px; margin: 0 auto 20px;
-            border: 2px solid var(--blood-red); border-radius: 50%;
-            overflow: hidden; position: relative;
-        }
-        .avatar-glitch img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Butonlar */
-        .cyber-btn {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #111; border: 1px solid var(--blood-red);
-            color: var(--blood-red); padding: 15px;
-            text-decoration: none; font-weight: bold; margin-bottom: 10px;
-            transition: 0.3s; font-family: 'Orbitron';
-        }
-        .cyber-btn:hover {
-            background: var(--blood-red); color: #000;
-            box-shadow: 0 0 20px var(--blood-red);
-        }
-
-        /* Efsaneler */
-        .legend-row { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .legend-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #555; filter: grayscale(100%); transition: 0.3s; }
-        .legend-img:hover { filter: grayscale(0%); border-color: var(--gs-yellow); transform: scale(1.2); }
-
-        /* Daktilo Efekti */
-        .type-effect::after { content: '_'; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* Mobil */
-        @media (max-width: 600px) {
-            .glitch-text { font-size: 30px; }
-            .skull-icon { font-size: 60px; }
-        }
     </style>
 </head>
 <body>
 
-    <div id="hack-screen">
-        <i class="fas fa-skull skull-icon"></i>
-        <div class="glitch-text">YOU GOT PARALYZED</div>
-        <div class="glitch-text" style="font-size: 24px; color: #fff;">BİLGİSAYARINIZ HACKLENMİŞTİR</div>
-        <div class="sub-text">SYSTEM FAILURE...</div>
-        <div id="countdown" style="margin-top:20px; color:red; font-size:12px;">IP ADRESİNİZ KOPYALANIYOR: %12</div>
+    <div id="hacked-screen">
+        <i class="fas fa-skull skull"></i>
+        <div class="big-text">YOU GOT PARALYZED</div>
+        <div class="small-text">BİLGİSAYARINIZ HACKLENMİŞTİR...</div>
+        <div id="loading-text" style="color:red; margin-bottom:20px;">IP ADRESİ KOPYALANIYOR... %12</div>
+        
+        <button class="restore-btn" onclick="sistemiKurtar()">SİSTEMİ KURTAR</button>
     </div>
 
-    <canvas id="matrix-canvas"></canvas>
-
-    <div id="main-interface">
+    <div id="profile-screen">
+        <canvas id="matrix-bg"></canvas>
         
-        <div class="top-bar">
-            <div class="hacker-name">M. ENES <span>TEKİN</span></div>
-            <div style="font-size:10px; color:var(--gs-yellow);">SYSTEM: RESTORED</div>
-        </div>
-
-        <div class="content">
-            <div class="hacker-card" style="text-align: center;">
-                <div class="avatar-glitch">
-                    <img src="https://media.licdn.com/dms/image/D4D03AQE5_u3xZ_3u9A/profile-displayphoto-shrink_800_800/0/1691234567890?e=2147483647&v=beta&t=X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'">
-                </div>
-                <h2 class="type-effect" id="welcome-msg"></h2>
-                <p style="color:#888; margin-top:10px; font-size:12px;">ELEKTRİK MÜHENDİSİ // SİBER GÜVENLİK MERAKLISI</p>
-                
-                <div class="legend-row">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="legend-img" title="Tesla">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="legend-img" title="Icardi">
-                </div>
+        <div class="card">
+            <div class="profile-img">
+                <img src="https://media.licdn.com/dms/image/D4D03AQE5_u3xZ_3u9A/profile-displayphoto-shrink_800_800/0/1691234567890?e=2147483647&v=beta&t=X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png'">
             </div>
+            <h1>M. ENES TEKİN</h1>
+            <p>SİBER GÜVENLİK & ELEKTRİK MÜHENDİSİ</p>
 
-            <div class="hacker-card">
-                <h3 style="color:var(--blood-red);">/// GİZLİ PROJELER</h3>
-                <ul style="margin-top:10px; padding-left:20px; line-height:1.6; font-size:13px;">
-                    <li>[Tamamlandı] Python Otomasyon Botu</li>
-                    <li>[Devam Ediyor] Yüksek Gerilim Analizi</li>
-                    <li>[Gizli] Icardi Gol Tahmin Yapay Zekası</li>
-                </ul>
-            </div>
-
-            <a href="https://www.instagram.com/menestekin909/" target="_blank" class="cyber-btn">
-                <span>INSTAGRAM ERİŞİMİ</span>
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="mailto:menestekin10@gmail.com" class="cyber-btn">
-                <span>ŞİFRELİ MAİL GÖNDER</span>
-                <i class="fas fa-envelope"></i>
-            </a>
-            <a href="https://github.com" target="_blank" class="cyber-btn">
-                <span>GITHUB REPOSU</span>
-                <i class="fab fa-github"></i>
-            </a>
-            
+            <a href="https://www.instagram.com/menestekin909/" class="btn">INSTAGRAM</a>
+            <a href="mailto:menestekin10@gmail.com" class="btn">MAIL GÖNDER</a>
+            <a href="https://github.com" class="btn">GITHUB</a>
         </div>
     </div>
 
     <script>
-        // --- 1. KORKU SENARYOSU YÖNETİCİSİ ---
-        window.onload = function() {
-            const hackScreen = document.getElementById('hack-screen');
-            const mainInterface = document.getElementById('main-interface');
-            const countdown = document.getElementById('countdown');
-            const welcomeMsg = document.getElementById('welcome-msg');
-            
-            let percent = 0;
-            
-            // Yüzde Sayacı
-            let countInterval = setInterval(() => {
-                percent += Math.floor(Math.random() * 5);
-                if(percent > 100) percent = 100;
-                countdown.innerText = "IP ADRESİNİZ KOPYALANIYOR: %" + percent;
-                
-                if(percent === 100) {
-                    clearInterval(countInterval);
-                    triggerRestore();
-                }
-            }, 150);
+        // KORKU SENARYOSU
+        let yuzde = 12;
+        const loading = document.getElementById('loading-text');
 
-            // Sistemi Düzeltme Fonksiyonu
-            function triggerRestore() {
-                setTimeout(() => {
-                    hackScreen.innerHTML = "<h1 style='color:#0f0; font-size:40px;'>SİSTEM KURTARILIYOR...</h1><p style='color:#fff'>M. Enes Tekin Güvenlik Duvarı Aktif.</p>";
-                    hackScreen.style.animation = "none"; // Titremeyi durdur
-                    
-                    setTimeout(() => {
-                        hackScreen.style.opacity = '0';
-                        setTimeout(() => {
-                            hackScreen.style.display = 'none';
-                            mainInterface.style.opacity = '1';
-                            initMatrix(); // Matrix yağmurunu başlat
-                            typeWriter("HOŞGELDİNİZ. SİSTEM GÜVENLİ.", welcomeMsg);
-                        }, 1000);
-                    }, 2000);
-                }, 1000);
+        // Sayılar artsın
+        setInterval(() => {
+            if(yuzde < 99) {
+                yuzde++;
+                loading.innerText = "IP ADRESİ KOPYALANIYOR... %" + yuzde;
             }
-        };
+        }, 100);
 
-        // --- 2. DAKTİLO EFEKTİ ---
-        function typeWriter(text, element) {
-            let i = 0;
-            element.innerHTML = "";
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, 100);
-                }
-            }
-            type();
+        // Butona basınca düzeltsin
+        function sistemiKurtar() {
+            document.getElementById('hacked-screen').style.display = 'none';
+            document.getElementById('profile-screen').style.display = 'flex';
+            matriksiBaslat(); // Arkadaki kodları başlat
         }
 
-        // --- 3. MATRIX YAĞMURU (KIRMIZI) ---
-        function initMatrix() {
-            const canvas = document.getElementById('matrix-canvas');
+        // MATRIX EFEKTİ
+        function matriksiBaslat() {
+            const canvas = document.getElementById('matrix-bg');
             const ctx = canvas.getContext('2d');
-
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            const chars = "01010101GALATASARAY";
+            const drops = Array(Math.floor(canvas.width / 15)).fill(1);
 
-            const chars = "10HACKEDERROR404SYSTEMFAILURE";
-            const fontSize = 12;
-            const columns = canvas.width / fontSize;
-            const drops = [];
-
-            for (let x = 0; x < columns; x++) drops[x] = 1;
-
-            function draw() {
+            setInterval(() => {
                 ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = "#ff0000"; // KAN KIRMIZISI KODLAR
-                ctx.font = fontSize + "px monospace";
-
+                ctx.fillStyle = "#0f0";
+                ctx.font = "15px monospace";
+                
                 for (let i = 0; i < drops.length; i++) {
                     const text = chars[Math.floor(Math.random() * chars.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
+                    ctx.fillText(text, i * 15, drops[i] * 15);
+                    if (drops[i] * 15 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                     drops[i]++;
                 }
-            }
-            setInterval(draw, 50);
+            }, 50);
         }
-
     </script>
+
 </body>
 </html>

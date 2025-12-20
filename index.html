@@ -3,181 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muhammed Enes | Efsaneler</title>
+    <title>M. Enes Tekin | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap');
 
         /* --- SAYFA YAPISI --- */
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-color: #050505; /* Siyah Zemin */
-            font-family: 'Rajdhani', sans-serif;
+            background-color: #050505;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden; /* Yan taşmayı engelle */
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            perspective: 1000px; /* 3D derinlik algısı */
         }
 
-        /* --- EFSANELER (RESİMLER) --- */
-        .efsaneler-container {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Tıklamayı engelleme, karta tıklansın */
-            z-index: 1;
-        }
-
-        .img-box {
+        /* Hareketli Arka Plan (Devre Kartı Havası) */
+        .bg-grid {
             position: absolute;
-            bottom: 0;
-            height: 85vh; /* Ekranın %85'i kadar büyük */
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
-            transition: all 0.5s ease;
-        }
-
-        /* Tesla Solda (Siyah Beyaz) */
-        .tesla-img {
-            left: 5%;
-            filter: grayscale(100%) contrast(1.2); /* Siyah beyaz ve net */
-            z-index: 1;
-        }
-
-        /* Icardi Sağda */
-        .icardi-img {
-            right: 5%;
-            z-index: 1;
-            /* Icardi'nin yüzü sola baksın diye çeviriyoruz */
-            transform: scaleX(-1); 
-        }
-
-        /* --- ORTA KART (NEON TASARIM) --- */
-        .kart-dis {
-            position: relative;
-            z-index: 10; /* Resimlerin üstünde */
-            width: 300px;
-            padding: 3px;
-            border-radius: 15px;
-            background: #111;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
-            margin-top: 50px; /* Mobilde yer açmak için */
-        }
-
-        /* Dönen Sarı Kırmızı Işık */
-        .kart-dis::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(60deg, transparent, #A90432, #FDB912, #A90432, transparent);
-            animation: donme 3s linear infinite;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(169, 4, 50, 0.1), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(253, 185, 18, 0.1), transparent 25%);
             z-index: -1;
         }
 
-        .kart-ic {
-            background: rgba(16, 16, 16, 0.95); /* Arkası görünmesin diye koyu */
-            border-radius: 12px;
-            padding: 30px 20px;
+        /* --- 3D KART --- */
+        .card {
+            width: 350px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); /* Buzlu cam */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            
+            /* Başlangıç ayarları */
+            transform-style: preserve-3d;
+            transform: rotateX(0) rotateY(0);
+            transition: transform 0.1s; /* Çok hızlı tepki versin */
             text-align: center;
             position: relative;
         }
 
-        .avatar { font-size: 50px; margin-bottom: 10px; }
-        
+        /* GS Renkli Yansıma Efekti */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, #A90432, transparent, #FDB912);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* Kartın içindekiler de 3D gibi havada dursun */
+        .content-layer {
+            transform: translateZ(30px); /* Havada durma efekti */
+        }
+
+        .avatar-box {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #222, #111);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            font-size: 40px;
+        }
+
         h1 {
-            color: white; margin: 0; font-size: 28px; text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(169, 4, 50, 0.5);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif; /* Fütüristik font */
+            font-size: 22px;
+            margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .surname {
+            color: #FDB912; /* GS Sarısı */
+            font-weight: 900;
+            font-size: 28px;
+            display: block; /* Alt satıra indir */
+            text-shadow: 0 0 15px rgba(253, 185, 18, 0.4);
+        }
+
+        .title {
+            color: #A90432; /* GS Kırmızısı */
+            font-size: 12px;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Butonlar */
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            border: 1px solid transparent;
+            font-weight: 500;
+        }
+
+        .btn i { margin-right: 10px; font-size: 18px; }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #FDB912;
+            transform: scale(1.02) translateZ(10px); /* Buton da öne fırlasın */
+            box-shadow: 0 0 20px rgba(253, 185, 18, 0.2);
+        }
+
+        .badges {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11px;
+            color: #555;
         }
         
-        .unvan { color: #888; margin-bottom: 25px; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
-
-        /* BUTONLAR */
-        .btn {
-            display: flex; align-items: center;
-            background: #222; color: white; text-decoration: none;
-            padding: 12px; margin-bottom: 10px; border-radius: 8px;
-            border: 1px solid #333; transition: 0.3s;
+        .badge-item {
+            background: #111;
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #333;
         }
-        .btn:hover {
-            background: #A90432; border-color: #FDB912; color: #FDB912;
-            transform: translateX(5px);
-        }
-        .btn i { margin-right: 15px; width: 20px; text-align: center; font-size: 18px; }
 
-        @keyframes donme { 100% { transform: rotate(360deg); } }
-
-
-        /* --- MOBİL UYUMLULUK (TELEFON İÇİN KRİTİK AYARLAR) --- */
-        @media screen and (max-width: 900px) {
-            body {
-                flex-direction: column; /* Alt alta diz */
-                justify-content: flex-start; /* Üstten başla */
-                padding-top: 20px;
-            }
-
-            .efsaneler-container {
-                position: relative; /* Sabit değil, akışkan olsun */
-                height: 250px; /* Resimlerin yüksekliği */
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-                margin-bottom: -40px; /* Kartın arkasına hafif girsin */
-            }
-
-            .img-box {
-                position: relative;
-                height: 100%; /* Kapsayıcının boyuna uy */
-                width: auto;
-                left: auto; right: auto;
-                bottom: auto;
-            }
-            
-            /* Mobilde yan yana dursunlar */
-            .tesla-img { margin-right: -20px; transform: scale(0.9); }
-            .icardi-img { margin-left: -20px; transform: scaleX(-1) scale(0.9); }
-
-            .kart-dis {
-                margin-top: 0;
-                width: 85%; /* Ekranı doldur */
-                margin-bottom: 30px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="efsaneler-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="img-box tesla-img" alt="Tesla">
-        
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="img-box icardi-img" alt="Icardi">
-    </div>
+    <div class="bg-grid"></div>
 
-    <div class="kart-dis">
-        <div class="kart-ic">
-            <div class="avatar">⚡</div> 
+    <div class="card" id="tiltCard">
+        <div class="content-layer">
             
-            <h1>Muhammed Enes</h1>
-            <div class="unvan">ELEKTRİK MÜHENDİSİ</div>
+            <div class="avatar-box">⚡</div>
+            
+            <h1>Muhammed Enes <span class="surname">TEKİN</span></h1>
+            <div class="title">Elektrik Mühendisi</div>
 
-            <a href="https://www.instagram.com/menestekin909/" class="btn" target="_blank">
-                <i class="fab fa-instagram"></i> Instagram
-            </a>
-            <a href="mailto:menestekin10@gmail.com" class="btn">
-                <i class="fas fa-envelope"></i> Mail Gönder
-            </a>
-            <a href="https://github.com" class="btn" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-            
-            <div class="footer" style="margin-top:20px; font-size:10px; color:#555;">
-                SCIENCE & FOOTBALL
+            <div class="links">
+                <a href="https://www.instagram.com/menestekin909/" class="btn" target="_blank">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+                
+                <a href="mailto:menestekin10@gmail.com" class="btn">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                
+                <a href="https://github.com" class="btn" target="_blank">
+                    <i class="fab fa-github"></i> GitHub Projects
+                </a>
+            </div>
+
+            <div class="badges">
+                <span class="badge-item"><i class="fas fa-bolt"></i> Tesla</span>
+                <span class="badge-item"><i class="fas fa-futbol"></i> Icardi</span>
             </div>
         </div>
     </div>
 
-</body>
-</html>
+    <script>
+        // --- 3D TILT EFEKTİ JAVASCRIPT ---
+        const card = document.getElementById('tiltCard');
+        const body = document.querySelector('body');
+
+        // Mouse hareketi (Bilgisayar için)
+        document.addEventListener('mousemove', (e) => {
+            rotateCard(e.clientX, e.clientY);
+        });
+
+        // Dokunmatik hareket (Telefon için)
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            rotateCard(touch.clientX, touch.clientY);
+        });
+
+        function rotateCard(x, y) {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            // Kartın ne kadar döneceğini hesapla
+            // (20 sayısı dönme hassasiyetidir, artırırsan daha az döner)
+            const rotateX = (centerY - y) / 20; 
+            const rotateY = (x - centerX) / 20;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }

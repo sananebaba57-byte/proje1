@@ -2,241 +2,451 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M. Enes Tekin | Official</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MET-OS | System Online</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        /* --- 1. SİSTEM ÇEKİRDEĞİ (CSS RESET & FONTS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap');
 
-        /* --- SAYFA YAPISI --- */
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-color: #050505; /* Tam Siyah */
-            font-family: 'Inter', sans-serif;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        /* Arka Plan Aslan Çizgileri */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 20% 20%, rgba(169, 4, 50, 0.1), transparent 30%),
-                        radial-gradient(circle at 80% 80%, rgba(253, 185, 18, 0.1), transparent 30%);
-            z-index: -1;
-        }
-
-        /* --- ANA PROFİL KARTI --- */
-        .profile-container {
-            width: 360px;
-            background: #111; /* Çok koyu gri */
-            border-radius: 24px;
+            margin: 0; padding: 0;
+            background-color: #050505;
+            color: #FDB912; /* GS Sarısı */
+            font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
-            border: 2px solid #222;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-            text-align: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- 2. BOOT EKRANI (AÇILIŞ ANİMASYONU) --- */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .terminal-text {
+            color: #A90432; /* GS Kırmızısı */
+            font-size: 14px;
+            width: 90%; max-width: 500px;
+            text-align: left;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .loading-bar-container {
+            width: 300px; height: 4px; background: #333; margin-top: 20px;
+            position: relative; overflow: hidden;
+        }
+        .loading-bar {
+            width: 0%; height: 100%; background: #FDB912;
+            transition: width 0.1s;
+        }
+
+        /* --- 3. MASAÜSTÜ (MAIN UI) --- */
+        #desktop {
+            opacity: 0; transition: opacity 1s ease;
+            width: 100%; height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, #1a0b0e 0%, #000000 100%);
+        }
+
+        /* Arka Plan Canvas */
+        #network-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+        }
+
+        /* HUD (Head-Up Display) Çerçeveleri */
+        .hud-corner {
+            position: absolute; width: 100px; height: 100px;
+            border: 2px solid rgba(253, 185, 18, 0.3);
+            pointer-events: none; z-index: 10;
+        }
+        .tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* Üst Bilgi Çubuğu */
+        .status-bar {
+            position: absolute; top: 0; left: 0; width: 100%;
+            height: 40px;
+            background: rgba(169, 4, 50, 0.1);
+            border-bottom: 1px solid rgba(253, 185, 18, 0.2);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+
+        .sys-info { font-size: 12px; display: flex; gap: 15px; letter-spacing: 1px; }
+        .blink { animation: blinker 2s linear infinite; color: #A90432; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* Orta İsim */
+        .main-title {
+            position: absolute; top: 15%; left: 50%;
+            transform: translateX(-50%);
+            text-align: center; z-index: 5;
+            text-shadow: 0 0 20px rgba(169, 4, 50, 0.6);
+        }
+        .main-title h1 { margin: 0; font-size: 4vw; text-transform: uppercase; letter-spacing: 5px; }
+        .main-title p { margin: 5px 0 0; color: #fff; letter-spacing: 2px; font-size: 1.2vw; }
+
+        /* --- 4. APP DOCK (ALT MENÜ) --- */
+        .dock-container {
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 20px;
+            z-index: 100;
+        }
+
+        .app-icon {
+            width: 70px; height: 70px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(253, 185, 18, 0.3);
+            border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
             position: relative;
         }
 
-        /* Üst Dekoratif Çizgi */
-        .top-banner {
-            height: 6px;
-            background: linear-gradient(90deg, #A90432, #FDB912, #A90432);
+        .app-icon i { font-size: 24px; margin-bottom: 5px; color: #fff; }
+        .app-icon span { font-size: 10px; text-transform: uppercase; font-weight: bold; }
+
+        .app-icon:hover {
+            transform: translateY(-10px) scale(1.1);
+            border-color: #A90432;
+            box-shadow: 0 0 20px rgba(169, 4, 50, 0.5);
+        }
+        .app-icon:hover i { color: #FDB912; }
+
+        /* --- 5. PENCERELER (MODALS) --- */
+        .window {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%; max-width: 500px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid #A90432;
+            border-radius: 10px;
+            z-index: 200;
+            opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column;
+            overflow: hidden;
         }
 
-        /* İÇERİK ALANI */
-        .icerik {
-            padding: 40px 25px 25px;
-        }
+        .window.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* PROFİL FOTOĞRAFI ALANI (ŞİMŞEK) */
-        .avatar-area {
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            background: #1a1a1a;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 60px;
-            border: 4px solid #111;
-            outline: 2px solid #FDB912; /* Sarı Çerçeve */
-            box-shadow: 0 0 20px rgba(253, 185, 18, 0.2);
-        }
-
-        /* İSİM VE SOYAD */
-        h1 {
-            font-size: 26px;
-            font-weight: 900;
-            margin: 0 0 5px;
-            letter-spacing: -0.5px;
+        .win-header {
+            background: linear-gradient(90deg, #A90432, #500015);
+            padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 14px; font-weight: bold; color: white;
         }
         
-        .soyisim {
-            color: #FDB912; /* GS Sarısı Soyad */
-            text-transform: uppercase;
-        }
+        .close-btn { cursor: pointer; color: #fff; transition: 0.2s; }
+        .close-btn:hover { color: #FDB912; transform: rotate(90deg); }
 
-        .unvan {
-            color: #999;
-            font-size: 13px;
-            letter-spacing: 1px;
-            margin-bottom: 35px;
-            font-weight: 400;
-        }
+        .win-content { padding: 30px; text-align: center; color: #ccc; }
 
-        /* --- EFSANELER BÖLÜMÜ (SADECE KOD VE İKON) --- */
-        .ilham-container {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .ilham-baslik {
-            font-size: 10px;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .ilham-kutular {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-        }
-
-        .ilham-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Resim yerine havalı yuvarlak ikonlar */
-        .ilham-ikon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #222;
+        /* İçerik Stilleri */
+        .profile-pic-large {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid #FDB912; margin: 0 auto 20px;
+            background: #222; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px;
-            margin-bottom: 8px;
-            border: 2px solid transparent;
+        }
+        .profile-pic-large img { width: 100%; height: 100%; object-fit: cover; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+        }
+        .stat-box {
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .stat-val { font-size: 20px; color: #FDB912; font-weight: bold; }
+        .stat-label { font-size: 10px; text-transform: uppercase; }
+
+        .btn-action {
+            display: block; width: 100%; padding: 12px; margin-top: 10px;
+            background: transparent; border: 1px solid #FDB912; color: #FDB912;
+            text-decoration: none; font-weight: bold; text-transform: uppercase;
             transition: 0.3s;
         }
+        .btn-action:hover { background: #FDB912; color: #000; }
 
-        /* Tesla İkonu Kırmızı */
-        .ikon-tesla { color: #A90432; border-color: #A90432; box-shadow: 0 0 10px rgba(169, 4, 50, 0.3); }
-        /* Icardi İkonu Sarı */
-        .ikon-icardi { color: #FDB912; border-color: #FDB912; box-shadow: 0 0 10px rgba(253, 185, 18, 0.3); }
-
-        .ilham-box span {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #fff;
+        /* Mobil Düzenleme */
+        @media (max-width: 600px) {
+            .main-title h1 { font-size: 30px; }
+            .main-title p { font-size: 12px; }
+            .dock-container { width: 90%; gap: 10px; justify-content: space-between; }
+            .app-icon { width: 60px; height: 60px; }
         }
 
-        /* --- BUTONLAR --- */
-        .links-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn {
-            background-color: rgba(255, 255, 255, 0.06);
-            color: white;
-            text-decoration: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s ease;
-            border: 1px solid transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn i { margin-right: 10px; font-size: 18px; }
-
-        /* Hoverda Galatasaray Neonları */
-        .btn:hover {
-            background-color: #1a1a1a;
-            border-color: #FDB912;
-            color: #FDB912;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(253, 185, 18, 0.2);
-        }
-
-        /* --- FOOTER --- */
-        .footer {
-            margin-top: 30px;
-            font-size: 11px;
-            color: #444;
-        }
     </style>
 </head>
 <body>
 
-    <div class="profile-container">
-        <div class="top-banner"></div>
-
-        <div class="icerik">
-            
-            <div class="avatar-area">
-                <i class="fas fa-bolt" style="color: #FDB912;"></i>
-            </div>
-
-            <h1>Muhammed Enes <span class="soyisim">TEKİN</span></h1>
-            <div class="unvan">Elektrik Mühendisi | Kocaeli Üniversitesi</div>
-
-            <div class="ilham-container">
-                <div class="ilham-baslik">İlham Kaynakları</div>
-                <div class="ilham-kutular">
-                    <div class="ilham-box">
-                        <div class="ilham-ikon ikon-tesla">
-                            <i class="fas fa-atom"></i> </div>
-                        <span>BİLİM</span>
-                    </div>
-                    <div class="ilham-box">
-                        <div class="ilham-ikon ikon-icardi">
-                            <i class="fas fa-futbol"></i> </div>
-                        <span>TUTKU</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="links-container">
-                <a href="https://www.instagram.com/menestekin909/" class="btn" target="_blank">
-                    <i class="fab fa-instagram"></i> Instagram
-                </a>
-                
-                <a href="mailto:menestekin10@gmail.com" class="btn">
-                    <i class="fas fa-envelope"></i> Mail Gönder
-                </a>
-                
-                <a href="https://github.com" class="btn" target="_blank">
-                    <i class="fab fa-github"></i> GitHub Projeleri
-                </a>
-            </div>
-
-            <div class="footer">
-                KOCAELİ ÜNİVERSİTESİ • 2025
-            </div>
+    <div id="boot-screen">
+        <div class="terminal-text" id="terminal-output"></div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="progress"></div>
         </div>
     </div>
 
+    <div id="desktop">
+        <canvas id="network-canvas"></canvas>
+
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+
+        <div class="status-bar">
+            <div class="sys-info">
+                <span>MET-OS v1.0</span>
+                <span class="blink">● ONLINE</span>
+            </div>
+            <div class="sys-info">
+                <span>CPU: <span id="cpu-val">12</span>%</span>
+                <span id="clock">00:00:00</span>
+            </div>
+        </div>
+
+        <div class="main-title">
+            <h1>Muhammed Enes TEKİN</h1>
+            <p>ELECTRICAL ENGINEER / SYSTEM ADMIN</p>
+        </div>
+
+        <div class="dock-container">
+            <div class="app-icon" onclick="openWindow('win-profile')">
+                <i class="fas fa-user-astronaut"></i>
+                <span>Kimlik</span>
+            </div>
+            <div class="app-icon" onclick="openWindow('win-projects')">
+                <i class="fas fa-microchip"></i>
+                <span>Yetenek</span>
+            </div>
+            <div class="app-icon" onclick="openWindow('win-contact')">
+                <i class="fas fa-satellite-dish"></i>
+                <span>İletişim</span>
+            </div>
+        </div>
+
+        <div class="window" id="win-profile">
+            <div class="win-header">
+                <span><i class="fas fa-id-card"></i> KİMLİK BİLGİSİ</span>
+                <i class="fas fa-times close-btn" onclick="closeWindow('win-profile')"></i>
+            </div>
+            <div class="win-content">
+                <div class="profile-pic-large">
+                    <i class="fas fa-bolt" style="font-size: 60px; color:#FDB912;"></i>
+                </div>
+                <h2 style="color:white; margin:0;">M. Enes TEKİN</h2>
+                <p style="color:#A90432; font-weight:bold;">KOCAELİ ÜNİVERSİTESİ</p>
+                <p>Elektrik mühendisliği öğrencisi. Teknoloji tutkunu. Galatasaray sevdalısı.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-val"><i class="fas fa-atom"></i></div>
+                        <div class="stat-label">TESLA (Bilim)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val"><i class="fas fa-futbol"></i></div>
+                        <div class="stat-label">ICARDI (Tutku)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="win-projects">
+            <div class="win-header">
+                <span><i class="fas fa-code-branch"></i> SİSTEM VERİLERİ</span>
+                <i class="fas fa-times close-btn" onclick="closeWindow('win-projects')"></i>
+            </div>
+            <div class="win-content">
+                <p>Mühendislik ve Yazılım Yetkinlikleri</p>
+                
+                <div style="text-align:left; margin-top:20px;">
+                    <p style="margin-bottom:5px;">Python / AI <span style="float:right;">90%</span></p>
+                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:90%; height:100%; background:#FDB912;"></div></div>
+                    
+                    <p style="margin-bottom:5px; margin-top:15px;">Elektrik Devreleri <span style="float:right;">95%</span></p>
+                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:95%; height:100%; background:#A90432;"></div></div>
+                    
+                    <p style="margin-bottom:5px; margin-top:15px;">MATLAB / Proteus <span style="float:right;">80%</span></p>
+                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:80%; height:100%; background:#fff;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="win-contact">
+            <div class="win-header">
+                <span><i class="fas fa-signal"></i> BAĞLANTI KUR</span>
+                <i class="fas fa-times close-btn" onclick="closeWindow('win-contact')"></i>
+            </div>
+            <div class="win-content">
+                <p>Aşağıdaki frekanslardan iletişime geçebilirsiniz.</p>
+                
+                <a href="https://www.instagram.com/menestekin909/" target="_blank" class="btn-action">
+                    <i class="fab fa-instagram"></i> INSTAGRAM
+                </a>
+                <a href="mailto:menestekin10@gmail.com" class="btn-action">
+                    <i class="fas fa-envelope"></i> E-MAIL
+                </a>
+                <a href="https://github.com" target="_blank" class="btn-action">
+                    <i class="fab fa-github"></i> GITHUB
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. BOOT SEQUENCE (AÇILIŞ YAZILARI) ---
+        const terminal = document.getElementById('terminal-output');
+        const progressBar = document.getElementById('progress');
+        const bootScreen = document.getElementById('boot-screen');
+        const desktop = document.getElementById('desktop');
+
+        const logs = [
+            "System initializing...",
+            "Loading Kernel: MET-OS v1.0",
+            "Checking Memory... OK",
+            "Connecting to Kocaeli University Server...",
+            "Loading Modules: Tesla_Physics.lib",
+            "Loading Modules: Icardi_Striker.exe",
+            "Configuring Neural Networks...",
+            "Access Granted. Welcome User."
+        ];
+
+        let logIndex = 0;
+        
+        function typeLogs() {
+            if (logIndex < logs.length) {
+                terminal.innerHTML += `> ${logs[logIndex]}<br>`;
+                progressBar.style.width = `${(logIndex + 1) * (100 / logs.length)}%`;
+                logIndex++;
+                setTimeout(typeLogs, 300); // Yazı hızı
+            } else {
+                setTimeout(bootComplete, 800);
+            }
+        }
+
+        function bootComplete() {
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                desktop.style.opacity = '1';
+                initParticles(); // Masaüstü gelince partikülleri başlat
+            }, 1000);
+        }
+
+        // Başlat
+        window.onload = typeLogs;
+
+
+        // --- 2. SAAT VE CPU SİMÜLASYONU ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+            
+            // Rastgele CPU Değeri
+            if(Math.random() > 0.5) {
+                const cpu = Math.floor(Math.random() * 30) + 10;
+                document.getElementById('cpu-val').innerText = cpu;
+            }
+        }
+        setInterval(updateClock, 1000);
+
+
+        // --- 3. PENCERE YÖNETİMİ ---
+        function openWindow(id) {
+            // Önce tüm pencereleri kapat
+            const windows = document.querySelectorAll('.window');
+            windows.forEach(w => w.classList.remove('open'));
+            
+            // Seçileni aç
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+
+        // --- 4. CANVAS PARTİKÜL EFEKTİ (ELEKTRİK AĞI) ---
+        function initParticles() {
+            const canvas = document.getElementById('network-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            const particleCount = 50; // Parçacık sayısı
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 1;
+                    this.vy = (Math.random() - 0.5) * 1;
+                    this.size = 2;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = '#A90432'; // Kırmızı Noktalar
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    
+                    // Bağlantı Çizgileri
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(253, 185, 18, ${1 - distance / 150})`; // Sarı Çizgiler
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+    </script>
 </body>
 </html>

@@ -3,230 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M. Enes Tekin | Official</title>
+    <title>M. Enes Tekin | Mühendis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        /* FONTLAR VE GENEL AYARLAR */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');
 
-        /* --- SIFIRLAMA VE TEMEL AYARLAR --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * { box-sizing: border-box; }
+
         body {
-            background-color: #050505; /* Apple Siyahı */
-            font-family: 'Inter', sans-serif;
-            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            background-color: #121212; /* Koyu Gri Arka Plan */
+            font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        /* --- ANA KART (CONTAINER) --- */
-        .container {
+        /* KART TASARIMI */
+        .kart {
+            background-color: #1e1e1e;
             width: 100%;
-            max-width: 400px; /* Telefon Genişliği Standardı */
+            max-width: 380px; /* Telefon boyutunda sabitler */
+            border-radius: 20px;
+            padding: 30px 20px;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-top: 5px solid #A90432; /* Üstte kırmızı çizgi */
+            border-bottom: 5px solid #FDB912; /* Altta sarı çizgi */
+        }
+
+        /* PROFİL FOTOĞRAFI */
+        .profil-img {
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border: 3px solid #fff;
+        }
+
+        /* İSİM VE BİLGİLER */
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            margin: 0 0 5px;
+        }
+
+        .unvan {
+            color: #bbb;
+            font-size: 14px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* EFSANELER (YAN YANA DURAN İKONLAR) */
+        .efsaneler {
+            display: flex;
+            justify-content: center;
+            gap: 25px; /* Aralarındaki boşluk */
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.05); /* Arkaya hafif fon */
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .efsane-kutu {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* --- PROFİL FOTOĞRAFI --- */
-        .profile-wrapper {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .profile-img {
-            width: 110px;
-            height: 110px;
+        .efsane-resim {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #111;
-            /* GS Gradient Halka */
-            background: linear-gradient(135deg, #A90432, #FDB912); 
-            padding: 3px; 
-            background-clip: content-box; /* Resmi halkanın içine al */
-        }
-        
-        .profile-emoji {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            background: #1a1a1a;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 50px;
-        }
-
-        /* --- İSİM VE ÜNVAN --- */
-        .header-text { margin-bottom: 25px; }
-        
-        .name {
-            font-size: 22px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            object-fit: cover; /* Resmi yuvarlağa sığdırır */
+            border: 2px solid #555;
             margin-bottom: 5px;
         }
 
-        /* Mavi Tik */
-        .verified { color: #3ba9f4; font-size: 18px; }
-
-        .title {
-            color: #888;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- EFSANELER (ICARDI & TESLA) --- */
-        /* Bu kısım ikisini yan yana, düzenli tutar */
-        .legends-area {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 35px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .legend-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .legend-img {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 8px;
-            border: 2px solid #333;
-            transition: transform 0.2s;
-        }
-        
-        /* Icardi için Sarı, Tesla için Kırmızı Çerçeve */
-        .legend-tesla { border-color: #A90432; }
-        .legend-icardi { border-color: #FDB912; }
-
-        .legend-label {
+        .efsane-isim {
+            color: #FDB912; /* Sarı yazı */
             font-size: 11px;
-            color: #aaa;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-weight: bold;
         }
 
-        /* --- BUTONLAR (LINKS) --- */
-        .links { width: 100%; display: flex; flex-direction: column; gap: 12px; }
-
-        .link-btn {
-            background-color: #151515;
+        /* LİNKLER (BUTONLAR) */
+        .btn {
+            display: block;
+            background-color: #2c2c2c;
             color: white;
-            padding: 18px 20px;
-            border-radius: 12px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: 0.2s;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* İkon ve yazıyı ayır */
-            transition: all 0.2s ease;
-            border: 1px solid #222;
+            justify-content: center;
+            border: 1px solid #333;
         }
 
-        .link-left { display: flex; align-items: center; gap: 15px; }
-        .link-icon { font-size: 20px; width: 24px; text-align: center; }
-        
-        /* Buton Hover Efektleri */
-        .link-btn:hover {
-            transform: scale(1.02);
-            background-color: #222;
-            border-color: #444;
-        }
+        .btn i { margin-right: 10px; font-size: 18px; }
 
-        /* Markalara Özel Renkler (Hoverda) */
-        .btn-insta:hover { color: #E1306C; border-color: #E1306C; }
-        .btn-mail:hover { color: #FDB912; border-color: #FDB912; }
-        .btn-git:hover { color: #fff; border-color: #fff; }
+        /* Buton Renkleri (Üzerine gelince) */
+        .btn:hover { background-color: #A90432; color: #fff; border-color: #A90432; }
 
-        /* --- FOOTER --- */
         .footer {
-            margin-top: 40px;
+            margin-top: 25px;
             font-size: 11px;
-            color: #444;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            color: #555;
         }
-        
-        .gs-star { color: #FDB912; font-size: 10px; }
-
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="kart">
+        <div class="profil-img">⚡</div>
+
+        <h1>Muhammed Enes TEKİN</h1>
+        <div class="unvan">Elektrik Mühendisi</div>
+
+        <div class="efsaneler">
+            <div class="efsane-kutu">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="efsane-resim" alt="Tesla">
+                <span class="efsane-isim">TESLA</span>
+            </div>
+            
+            <div class="efsane-kutu">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="efsane-resim" alt="Icardi">
+                <span class="efsane-isim">ICARDI</span>
+            </div>
+        </div>
+
+        <a href="https://www.instagram.com/menestekin909/" class="btn">
+            <i class="fab fa-instagram"></i> Instagram
+        </a>
         
-        <div class="profile-wrapper">
-            <div class="profile-img">
-                <div class="profile-emoji">⚡</div> </div>
-        </div>
-
-        <div class="header-text">
-            <div class="name">
-                Muhammed Enes TEKİN 
-                <i class="fas fa-check-circle verified"></i> </div>
-            <div class="title">Elektrik Mühendisi | Kocaeli Üniversitesi</div>
-        </div>
-
-        <div class="legends-area">
-            <div class="legend-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="legend-img legend-tesla" alt="Tesla">
-                <span class="legend-label">Bilim</span>
-            </div>
-            <div class="legend-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="legend-img legend-icardi" alt="Icardi">
-                <span class="legend-label">Tutku</span>
-            </div>
-        </div>
-
-        <div class="links">
-            <a href="https://www.instagram.com/menestekin909/" class="link-btn btn-insta" target="_blank">
-                <div class="link-left">
-                    <i class="fab fa-instagram link-icon"></i>
-                    <span>Instagram</span>
-                </div>
-                <i class="fas fa-chevron-right" style="font-size: 12px; color: #555;"></i> </a>
-
-            <a href="mailto:menestekin10@gmail.com" class="link-btn btn-mail">
-                <div class="link-left">
-                    <i class="fas fa-envelope link-icon"></i>
-                    <span>Bana Mail At</span>
-                </div>
-                <i class="fas fa-chevron-right" style="font-size: 12px; color: #555;"></i>
-            </a>
-
-            <a href="https://github.com" class="link-btn btn-git" target="_blank">
-                <div class="link-left">
-                    <i class="fab fa-github link-icon"></i>
-                    <span>GitHub Projelerim</span>
-                </div>
-                <i class="fas fa-chevron-right" style="font-size: 12px; color: #555;"></i>
-            </a>
-        </div>
+        <a href="mailto:menestekin10@gmail.com" class="btn">
+            <i class="fas fa-envelope"></i> Mail Gönder
+        </a>
+        
+        <a href="https://github.com" class="btn">
+            <i class="fab fa-github"></i> GitHub
+        </a>
 
         <div class="footer">
-            <span>Designed by Enes</span>
-            <i class="fas fa-star gs-star"></i>
-            <span>1905</span>
+            Kocaeli Üniversitesi • 2025
         </div>
-
     </div>
 
 </body>

@@ -3,164 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muhammed Enes | Profil</title>
+    <title>Muhammed Enes | CyberCard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
 
-        /* --- GENEL AYARLAR --- */
+        /* --- SAYFA YAPISI --- */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #1a1a1a; /* Koyu Gri Zemin */
-            color: white;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Taşmaları gizle */
-            position: relative;
-        }
-
-        /* --- ARKA PLAN RESİMLERİ (TESLA & ICARDI) --- */
-        .bg-img {
-            position: absolute;
-            bottom: 0;
-            height: 90vh; /* Ekranın %90'ı kadar yükseklik */
-            opacity: 0.8; /* Hafif şeffaflık */
-            z-index: 1;
-            transition: all 0.5s ease;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
-        }
-
-        /* Tesla Solda */
-        .tesla {
-            left: -50px;
-            filter: grayscale(100%); /* Siyah Beyaz olsun */
-        }
-
-        /* Icardi Sağda */
-        .icardi {
-            right: -50px;
-        }
-
-        /* --- ORTA KART --- */
-        .kart {
-            position: relative;
-            z-index: 10; /* Resimlerin üstünde duracak */
-            background: rgba(20, 20, 20, 0.85); /* Çok koyu cam */
-            backdrop-filter: blur(20px);
-            width: 340px;
-            padding: 40px 30px;
-            border-radius: 30px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            
-            /* Kart Animasyonu */
-            animation: kartGelis 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .profil-img-kutu {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            padding: 4px;
-            /* GS Degrade Çerçeve */
-            background: linear-gradient(to right, #A90432, #FDB912);
-            box-shadow: 0 0 20px rgba(169, 4, 50, 0.6);
-        }
-
-        .profil-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
+            min-height: 100vh;
+            background-color: #050505; /* Simsiyah */
+            font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
         }
 
-        h1 { margin: 10px 0 5px; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
-        .unvan { color: #aaa; font-size: 14px; margin-bottom: 30px; font-weight: 300; }
-        .gs-text { color: #FDB912; font-weight: bold; }
+        /* Arka Plan Izgarası (Teknik Hava) */
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+        }
 
-        /* BUTONLAR */
+        /* --- NEON KART --- */
+        .kart-dis {
+            position: relative;
+            z-index: 10;
+            width: 300px;
+            padding: 4px; /* Neon kalınlığı */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(169, 4, 50, 0.3); /* Kırmızı pus */
+        }
+
+        /* Dönen Neon Işık (Sarı-Kırmızı) */
+        .kart-dis::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent, #A90432, #FDB912, #A90432, transparent);
+            animation: donme 3s linear infinite;
+        }
+
+        /* Kartın İçi */
+        .kart-ic {
+            position: relative;
+            background: #101010;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            z-index: 11;
+        }
+
+        /* Profil Emojisi */
+        .avatar {
+            font-size: 60px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px #FDB912);
+        }
+
+        /* Glitch (Cızırtılı) İsim Efekti */
+        .glitch-isim {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            position: relative;
+            text-shadow: 2px 2px 0px #A90432;
+        }
+
+        .unvan {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* --- BUTONLAR --- */
         .btn {
             display: flex;
             align-items: center;
-            background: white;
-            color: #1a1a1a;
-            padding: 14px 20px;
-            margin-bottom: 12px;
-            border-radius: 12px;
+            justify-content: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            color: #eee;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
         }
 
-        .btn i { margin-right: 15px; font-size: 20px; }
-
-        /* Buton Renkleri */
-        .btn-instagram:hover { background: #E1306C; color: white; transform: translateY(-3px); }
-        .btn-mail:hover { background: #FDB912; color: #1a1a1a; transform: translateY(-3px); }
-        .btn-github:hover { background: #333; color: white; border-color: white; transform: translateY(-3px); }
-
-        /* --- MOBİL UYUMLULUK (TELEFON İÇİN) --- */
-        @media screen and (max-width: 800px) {
-            /* Mobilde resimleri biraz geri plana atalım ki yazı okunsun */
-            .bg-img {
-                height: 50vh; /* Boyutu küçült */
-                opacity: 0.2; /* İyice silikleştir */
-            }
-            .tesla { left: -80px; top: 0; bottom: auto; } /* Tesla üstte */
-            .icardi { right: -80px; bottom: 0; } /* Icardi altta */
+        .btn i {
+            margin-right: 15px;
+            font-size: 20px;
+            width: 25px;
+            text-align: center;
         }
 
-        @keyframes kartGelis {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .btn:hover {
+            background: #A90432; /* GS Kırmızısı */
+            color: #FDB912; /* GS Sarısı */
+            border-color: #FDB912;
+            transform: translateX(5px); /* Sağa kayma */
+            box-shadow: 0 0 15px rgba(169, 4, 50, 0.5);
         }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 10px;
+            color: #444;
+        }
+
+        /* Animasyonlar */
+        @keyframes donme {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body>
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="bg-img tesla" alt="Nikola Tesla">
+    <div class="grid-bg"></div>
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="bg-img icardi" alt="Mauro Icardi">
+    <div class="kart-dis">
+        <div class="kart-ic">
+            
+            <div class="avatar">⚡</div> <h1 class="glitch-isim">Muhammed Enes</h1>
+            <div class="unvan">&lt;Elektrik Mühendisi /&gt;</div>
 
-    <div class="kart">
-        <div class="profil-img-kutu">
-            <div class="profil-img">🦁</div>
+            <a href="https://www.instagram.com/menestekin909/" class="btn" target="_blank">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+
+            <a href="mailto:menestekin10@gmail.com" class="btn">
+                <i class="fas fa-envelope"></i> Mail Gönder
+            </a>
+
+            <a href="https://github.com" class="btn" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            
+            <div class="footer">
+                EST. 2025 | KOCAELİ ÜNİ.
+            </div>
         </div>
-
-        <h1>Muhammed Enes</h1>
-        <div class="unvan">
-            Elektrik Mühendisi Adayı ⚡<br>
-            Kocaeli Üniversitesi
-        </div>
-
-        <a href="https://www.instagram.com/menestekin909/" class="btn btn-instagram" target="_blank">
-            <i class="fab fa-instagram"></i> Instagram
-        </a>
-
-        <a href="mailto:menestekin10@gmail.com" class="btn btn-mail">
-            <i class="fas fa-envelope"></i> Mail Gönder
-        </a>
-
-        <a href="https://github.com" class="btn btn-github" target="_blank">
-            <i class="fab fa-github"></i> GitHub
-        </a>
-        
-        <p style="font-size:10px; color:#555; margin-top:20px;">
-            "Bilim solda, Aşk sağda."
-        </p>
     </div>
 
 </body>

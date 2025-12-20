@@ -36,18 +36,22 @@
             border-bottom: 5px solid #FDB912; /* Altta sarı çizgi */
         }
 
-        /* PROFİL FOTOĞRAFI */
+        /* PROFİL FOTOĞRAFI (ŞİMŞEK YERİNE RESİM) */
         .profil-img {
-            width: 100px;
-            height: 100px;
-            background-color: #333;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
+            overflow: hidden; /* Taşan kısımları gizle */
             border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Gerçek resim için stil */
+        .profil-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Resmi yuvarlağa sığdırır, bozmaz */
         }
 
         /* İSİM VE BİLGİLER */
@@ -84,8 +88,8 @@
         }
 
         .efsane-resim {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             object-fit: cover; /* Resmi yuvarlağa sığdırır */
             border: 2px solid #555;
@@ -94,7 +98,7 @@
 
         .efsane-isim {
             color: #FDB912; /* Sarı yazı */
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
         }
 
@@ -130,24 +134,27 @@
 <body>
 
     <div class="kart">
-        <div class="profil-img">⚡</div>
+        
+        <div class="profil-img">
+            <img src="INSTAGRAM_RESIM_LINKI_BURAYA" alt="Muhammed Enes TEKİN">
+        </div>
 
         <h1>Muhammed Enes TEKİN</h1>
         <div class="unvan">Elektrik Mühendisi</div>
 
         <div class="efsaneler">
             <div class="efsane-kutu">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="efsane-resim" alt="Tesla">
-                <span class="efsane-isim">TESLA</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg" class="efsane-resim" alt="Nikola Tesla">
+                <span class="efsane-isim">BİLİM</span>
             </div>
             
             <div class="efsane-kutu">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg" class="efsane-resim" alt="Icardi">
-                <span class="efsane-isim">ICARDI</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg?v=2" class="efsane-resim" alt="Mauro Icardi">
+                <span class="efsane-isim">TUTKU</span>
             </div>
         </div>
 
-        <a href="https://www.instagram.com/menestekin909/" class="btn">
+        <a href="https://www.instagram.com/menestekin909/" class="btn" target="_blank">
             <i class="fab fa-instagram"></i> Instagram
         </a>
         
@@ -155,7 +162,7 @@
             <i class="fas fa-envelope"></i> Mail Gönder
         </a>
         
-        <a href="https://github.com" class="btn">
+        <a href="https://github.com" class="btn" target="_blank">
             <i class="fab fa-github"></i> GitHub
         </a>
 

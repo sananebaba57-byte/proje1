@@ -2,450 +2,994 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MET-OS | System Online</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>M. Enes Tekin | MET-OS Pro v2.1 | System Online</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. SİSTEM ÇEKİRDEĞİ (CSS RESET & FONTS) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap');
+        /* -----------------------------------------------------------
+           1. SİSTEM ÇEKİRDEĞİ & GLOBAL DEĞİŞKENLER (CSS)
+           Bin satıra ulaşmak için her renk, gölge ve animasyon 
+           tek tek tanımlanmıştır.
+           ----------------------------------------------------------- */
+        :root {
+            /* Galatasaray Neon Paleti */
+            --gs-sarisi: #FDB912;
+            --gs-sarisi-glow: rgba(253, 185, 18, 0.5);
+            --gs-kirmizisi: #A90432;
+            --gs-kirmizisi-glow: rgba(169, 4, 50, 0.5);
+            
+            /* Siber Siyah Paleti */
+            --bg-siyah: #000000;
+            --bg-koyu-gri: #050505;
+            --bg-pencere: rgba(10, 10, 10, 0.85); /* Glassmorphism */
+            
+            /* Yazı Renkleri */
+            --yazi-beyaz: #ffffff;
+            --yazi-gri: #bbbbbb;
+            --yazi-karanlik: #555555;
 
-        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            margin: 0; padding: 0;
-            background-color: #050505;
-            color: #FDB912; /* GS Sarısı */
-            font-family: 'Rajdhani', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            /* Sınırlar ve Gölgeler */
+            --sınır: rgba(255, 255, 255, 0.05);
+            --sınır-aktif: rgba(253, 185, 18, 0.3);
+            --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.9);
+            --shadow-neon-sari: 0 0 15px var(--gs-sarisi-glow);
+            --shadow-neon-kirmizi: 0 0 15px var(--gs-kirmizisi-glow);
+            
+            /* Fontlar */
+            --font-main: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+            --font-headline: 'Syncopate', sans-serif;
         }
 
-        /* --- 2. BOOT EKRANI (AÇILIŞ ANİMASYONU) --- */
-        #boot-screen {
+        /* CSS Reset */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            user-select: none; /* Yazı seçmeyi engelle (Masaüstü hissi) */
+            -webkit-touch-callout: none; 
+            -webkit-tap-highlight-color: transparent; /* Mobilde dokunma rengini kaldır */
+        }
+
+        /* Kaydırma Çubuklarını Profesyonelleştir */
+        ::-webkit-scrollbar { width: 4px; height: 4px; background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gs-sarisi); }
+
+        body {
+            background-color: var(--bg-siyah);
+            color: var(--yazi-beyaz);
+            font-family: var(--font-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Tarayıcı kaydırmasını engelle */
+            position: relative;
+        }
+
+        /* CRT Ekran Çizgileri Efekti */
+        body::before {
+            content: '';
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.05),
+                rgba(0, 0, 0, 0.05) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none; z-index: 9998; /* Her şeyin üstünde, tık devre dışı */
+            opacity: 0.5;
+        }
+
+        /* -----------------------------------------------------------
+           2. BOOT SEQUENCE (SİSTEM AÇILIŞ EKRANI)
+           Burada hacker havası veren terminal yazıları akar.
+           ----------------------------------------------------------- */
+        #boot-sequence {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000000;
+            z-index: 9999; /* En üst katman */
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: var(--font-mono);
+            padding: 20px;
         }
 
         .terminal-text {
-            color: #A90432; /* GS Kırmızısı */
-            font-size: 14px;
-            width: 90%; max-width: 500px;
+            color: var(--gs-kirmizisi);
+            text-shadow: var(--shadow-neon-kirmizi);
+            font-size: 13px;
+            width: 100%; max-width: 600px;
             text-align: left;
             white-space: pre-wrap;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .loading-bar-container {
-            width: 300px; height: 4px; background: #333; margin-top: 20px;
+        .terminal-text .succes-text { color: var(--gs-sarisi); text-shadow: var(--shadow-neon-sari); }
+        .terminal-text .info-text { color: #fff; }
+
+        .loading-container {
+            width: 100%; max-width: 300px; height: 2px;
+            background: #1a1a1a; margin-top: 30px;
             position: relative; overflow: hidden;
         }
-        .loading-bar {
-            width: 0%; height: 100%; background: #FDB912;
-            transition: width 0.1s;
+        .loading-progress {
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, var(--gs-kirmizisi), var(--gs-sarisi));
+            box-shadow: 0 0 10px var(--gs-sarisi);
+            transition: width 0.1s linear;
         }
 
-        /* --- 3. MASAÜSTÜ (MAIN UI) --- */
-        #desktop {
-            opacity: 0; transition: opacity 1s ease;
-            width: 100%; height: 100%;
-            position: relative;
+        /* -----------------------------------------------------------
+           3. MASAÜSTÜ UI (SİSTEM YÜKLENDİKTEN SONRA)
+           ----------------------------------------------------------- */
+        #met-os-desktop {
+            position: relative; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1.5s ease-in-out; /* Yavaşça belirme */
+            z-index: 1;
+            display: flex; flex-direction: column;
             background: radial-gradient(circle at center, #1a0b0e 0%, #000000 100%);
         }
 
-        /* Arka Plan Canvas */
-        #network-canvas {
+        /* Canlı Partikül Canvası */
+        #desktop-canvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
+            z-index: 0; /* En arkada */
         }
 
-        /* HUD (Head-Up Display) Çerçeveleri */
-        .hud-corner {
-            position: absolute; width: 100px; height: 100px;
-            border: 2px solid rgba(253, 185, 18, 0.3);
-            pointer-events: none; z-index: 10;
+        /* -----------------------------------------------------------
+           4. HUD (HEAD-UP DISPLAY) ELEMANLARI
+           Masaüstündeki teknik çerçeveler.
+           ----------------------------------------------------------- */
+        .hud-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none; z-index: 2;
         }
-        .tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
-        .tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
-        .bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
-        .br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
-
-        /* Üst Bilgi Çubuğu */
-        .status-bar {
-            position: absolute; top: 0; left: 0; width: 100%;
-            height: 40px;
-            background: rgba(169, 4, 50, 0.1);
-            border-bottom: 1px solid rgba(253, 185, 18, 0.2);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; z-index: 20;
-            backdrop-filter: blur(5px);
+        .hud-line.h { height: 1px; width: 80%; left: 10%; }
+        .hud-line.v { width: 1px; height: 80%; top: 10%; }
+        
+        .corner-bracket {
+            position: absolute; width: 30px; height: 30px;
+            border: 2px solid rgba(253, 185, 18, 0.2);
+            z-index: 2; pointer-events: none;
         }
+        .cb-tl { top: 50px; left: 20px; border-right: none; border-bottom: none; }
+        .cb-tr { top: 50px; right: 20px; border-left: none; border-bottom: none; }
+        .cb-bl { bottom: 80px; left: 20px; border-right: none; border-top: none; }
+        .cb-br { bottom: 80px; right: 20px; border-left: none; border-top: none; }
 
-        .sys-info { font-size: 12px; display: flex; gap: 15px; letter-spacing: 1px; }
-        .blink { animation: blinker 2s linear infinite; color: #A90432; }
-        @keyframes blinker { 50% { opacity: 0; } }
-
-        /* Orta İsim */
-        .main-title {
-            position: absolute; top: 15%; left: 50%;
-            transform: translateX(-50%);
-            text-align: center; z-index: 5;
-            text-shadow: 0 0 20px rgba(169, 4, 50, 0.6);
+        /* SİSTEM GÖSTERGELERİ (SAĞ ALT) */
+        .system-indicators {
+            position: absolute; bottom: 80px; right: 30px;
+            z-index: 5; font-family: var(--font-mono);
+            font-size: 10px; color: var(--yazi-karanlik);
+            text-align: right; letter-spacing: 1px;
         }
-        .main-title h1 { margin: 0; font-size: 4vw; text-transform: uppercase; letter-spacing: 5px; }
-        .main-title p { margin: 5px 0 0; color: #fff; letter-spacing: 2px; font-size: 1.2vw; }
+        .indicator-item { margin-bottom: 5px; }
+        .indicator-item span { color: var(--gs-sarisi); }
+        .gs-star-blink { color: var(--gs-sarisi); animation: blink 1s infinite alternate; }
+        @keyframes blink { from { opacity: 0.3; } to { opacity: 1; text-shadow: 0 0 5px var(--gs-sarisi); } }
 
-        /* --- 4. APP DOCK (ALT MENÜ) --- */
-        .dock-container {
-            position: absolute; bottom: 40px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; gap: 20px;
-            z-index: 100;
-        }
-
-        .app-icon {
-            width: 70px; height: 70px;
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid rgba(253, 185, 18, 0.3);
-            border-radius: 15px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: 0.3s;
+        /* -----------------------------------------------------------
+           5. GÖREV ÇUBUĞU (STATUS BAR) & DOCK
+           ----------------------------------------------------------- */
+        #status-bar {
+            height: 40px; width: 100%;
+            background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(10px);
-            position: relative;
-        }
-
-        .app-icon i { font-size: 24px; margin-bottom: 5px; color: #fff; }
-        .app-icon span { font-size: 10px; text-transform: uppercase; font-weight: bold; }
-
-        .app-icon:hover {
-            transform: translateY(-10px) scale(1.1);
-            border-color: #A90432;
-            box-shadow: 0 0 20px rgba(169, 4, 50, 0.5);
-        }
-        .app-icon:hover i { color: #FDB912; }
-
-        /* --- 5. PENCERELER (MODALS) --- */
-        .window {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 90%; max-width: 500px;
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid #A90432;
-            border-radius: 10px;
-            z-index: 200;
-            opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            display: flex; flex-direction: column;
-            overflow: hidden;
-        }
-
-        .window.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-
-        .win-header {
-            background: linear-gradient(90deg, #A90432, #500015);
-            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 14px; font-weight: bold; color: white;
+            padding: 0 20px; z-index: 1000;
+            font-size: 12px; letter-spacing: 1px;
+        }
+
+        .sys-logo { font-family: var(--font-headline); color: var(--gs-sarisi); font-size: 14px; }
+        .sys-clock-area { display: flex; gap: 15px; color: var(--yazi-gri); }
+        .saat { color: white; font-weight: bold; }
+        
+        /* --- DOCK (APP MENÜSÜ) --- */
+        #dock-container {
+            position: absolute; bottom: 10px; left: 50%;
+            transform: translateX(-50%);
+            height: 60px; padding: 0 10px;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dock-icon {
+            width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fff;
+            cursor: pointer; border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
         }
         
-        .close-btn { cursor: pointer; color: #fff; transition: 0.2s; }
-        .close-btn:hover { color: #FDB912; transform: rotate(90deg); }
+        /* İsim Baloncuğu (Tool-tip) */
+        .dock-icon::after {
+            content: attr(data-name);
+            position: absolute; top: -35px; left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: rgba(0,0,0,0.9); color: #fff;
+            padding: 5px 10px; border-radius: 5px;
+            font-size: 10px; white-space: nowrap;
+            font-weight: bold; opacity: 0;
+            transition: 0.2s; border: 1px solid var(--sınır-aktif);
+            pointer-events: none; text-transform: uppercase;
+        }
 
-        .win-content { padding: 30px; text-align: center; color: #ccc; }
+        .dock-icon:hover {
+            transform: translateY(-10px) scale(1.1);
+            background: var(--gs-kirmizisi);
+            box-shadow: 0 5px 15px rgba(169, 4, 50, 0.5);
+        }
+        .dock-icon:hover::after { transform: translateX(-50%) scale(1); opacity: 1; top: -45px; }
+        .dock-icon i { transition: 0.2s; }
+        .dock-icon:hover i { color: var(--gs-sarisi); transform: rotate(5deg); }
 
-        /* İçerik Stilleri */
-        .profile-pic-large {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 3px solid #FDB912; margin: 0 auto 20px;
-            background: #222; overflow: hidden;
+        /* -----------------------------------------------------------
+           6. PENCERE YÖNETİM SİSTEMİ (WINDOWS)
+           Tamamen Sürüklenebilir ve Kapatılabilir Pencereler.
+           ----------------------------------------------------------- */
+        .met-window {
+            position: absolute; width: 360px;
+            background: var(--bg-pencere);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            border: 1px solid var(--sınır);
+            box-shadow: var(--shadow-premium);
+            z-index: 100;
+            display: none; /* Başlangıçta gizli */
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translate(-50%, -50%) scale(0.9);
+            
+            /* Sürükleme için başlangıç pozisyonu */
+            top: 50%; left: 50%;
+        }
+
+        /* Pencere Açıkken */
+        .met-window.window-open {
+            display: flex;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* En üstteki pencere parlak olsun */
+        .met-window.window-active {
+            border-color: var(--sınır-aktif);
+            z-index: 500;
+            box-shadow: 0 0 30px rgba(169, 4, 50, 0.2);
+        }
+
+        /* --- Pencere Başlığı (Sürükleme Alanı) --- */
+        .win-header {
+            height: 35px; width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--sınır);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 12px; cursor: grab; /* Sürüklenebilir imleç */
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: bold; color: var(--yazi-beyaz);
+        }
+        
+        .win-header:active { cursor: grabbing; } /* Sürüklerken imleç */
+
+        .win-title i { margin-right: 8px; color: var(--gs-sarisi); }
+        
+        /* Kontrol Butonları */
+        .win-controls { display: flex; gap: 6px; align-items: center; }
+        .win-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .win-close { background-color: #ff5f56; }
+        .win-close:hover { background-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
+        .win-min { background-color: #ffbd2e; }
+        .win-max { background-color: #27c93f; opacity: 0.3; cursor: not-allowed; } /* Devre Dışı */
+
+        /* --- Pencere İçeriği --- */
+        .win-body {
+            padding: 25px;
+            color: var(--yazi-beyaz);
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-y: auto; /* İçerik taşarsa kaydır */
+            max-height: 70vh; /* Mobilde taşmasın */
+        }
+
+        /* -----------------------------------------------------------
+           7. UYGULAMA ÖZEL İÇERİKLERİ (HTML)
+           ----------------------------------------------------------- */
+        
+        /* --- [ KİMLİK UYGULAMASI ] --- */
+        .profile-section { text-align: center; }
+        
+        .profile-avatar-box {
+            width: 100px; height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--gs-kirmizisi), var(--gs-sarisi));
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        .avatar-img-area {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: #111;
             display: flex; align-items: center; justify-content: center;
+            font-size: 50px; overflow: hidden;
         }
-        .profile-pic-large img { width: 100%; height: 100%; object-fit: cover; }
 
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+        .user-name {
+            font-family: var(--font-main); font-size: 24px;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin: 0; color: #fff; font-weight: 700;
         }
-        .stat-box {
-            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;
-            border: 1px solid #333;
+        .user-surname { color: var(--gs-sarisi); font-weight: 900; }
+        
+        .user-title {
+            color: var(--gs-kirmizisi); font-weight: bold;
+            font-size: 12px; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 20px;
         }
-        .stat-val { font-size: 20px; color: #FDB912; font-weight: bold; }
-        .stat-label { font-size: 10px; text-transform: uppercase; }
 
-        .btn-action {
-            display: block; width: 100%; padding: 12px; margin-top: 10px;
-            background: transparent; border: 1px solid #FDB912; color: #FDB912;
-            text-decoration: none; font-weight: bold; text-transform: uppercase;
-            transition: 0.3s;
-        }
-        .btn-action:hover { background: #FDB912; color: #000; }
+        .profile-bio { font-size: 13px; color: var(--yazi-gri); font-style: italic; margin-bottom: 25px; }
 
-        /* Mobil Düzenleme */
-        @media (max-width: 600px) {
-            .main-title h1 { font-size: 30px; }
-            .main-title p { font-size: 12px; }
-            .dock-container { width: 90%; gap: 10px; justify-content: space-between; }
-            .app-icon { width: 60px; height: 60px; }
+        /* Mühendislik Rozetleri */
+        .badges-area { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .müh-badge {
+            font-size: 10px; font-weight: bold;
+            padding: 5px 10px; background: #000;
+            border-radius: 20px; border: 1px solid #333;
+            color: var(--yazi-gri); text-transform: uppercase;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .müh-badge i { color: var(--gs-kirmizisi); }
+
+        /* --- [ YETENEKLER UYGULAMASI ] --- */
+        .skill-group { margin-bottom: 20px; }
+        .skill-label {
+            font-size: 12px; color: #fff;
+            display: flex; justify-content: space-between;
+            margin-bottom: 6px; text-transform: uppercase; font-weight: bold;
+        }
+        .skill-label span.percent { color: var(--gs-sarisi); }
+        
+        /* Skill Progress Bar */
+        .progress-track {
+            height: 8px; width: 100%; background: #1a1a1a;
+            border-radius: 4px; border: 1px solid #222;
+            position: relative; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--gs-kirmizisi), var(--gs-sarisi));
+            box-shadow: 0 0 10px var(--gs-sarisi-glow);
+            width: 0; /* JS ile dolacak */
+            transition: width 1.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+
+        /* --- [ BAĞLANTI UYGULAMASI ] --- */
+        .connection-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .conn-btn {
+            background-color: rgba(255,255,255,0.03);
+            border: 1px solid #333; color: white;
+            text-decoration: none; padding: 15px;
+            border-radius: 10px; display: flex;
+            align-items: center; justify-content: space-between;
+            transition: all 0.2s;
+        }
+        .conn-btn-left { display: flex; align-items: center; gap: 15px; font-weight: bold; }
+        .conn-btn i.icon { font-size: 20px; width: 25px; text-align: center; }
+        .conn-btn i.arrow { font-size: 12px; color: #444; transition: 0.2s; }
+
+        .conn-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--gs-kirmizisi);
+            box-shadow: 0 5px 15px rgba(169, 4, 50, 0.2);
+        }
+        .conn-btn:hover i.arrow { color: var(--gs-sarisi); transform: translateX(3px); }
+        
+        /* Sosyal Renkler */
+        .btn-instagram:hover i.icon { color: #E1306C; }
+        .btn-mail:hover i.icon { color: var(--gs-sarisi); }
+        .btn-github:hover i.icon { color: #fff; }
+
+        /* --- [ NOTLAR UYGULAMASI ] --- */
+        .note-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px; padding: 15px;
+            font-family: var(--font-mono); font-size: 12px;
+            color: #aaa; border-left: 3px solid var(--gs-sarisi);
+            margin-bottom: 15px;
+        }
+        .note-box.red { border-left-color: var(--gs-kirmizisi); }
+
+        /* -----------------------------------------------------------
+           8. FOOTER & EKSTRA (CSS)
+           ----------------------------------------------------------- */
+        .met-footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 10px;
+            color: var(--yazi-karanlik);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+
+        /* --- MOBİL AYARLAR (MEDIA QUERIES) --- */
+        @media screen and (max-width: 768px) {
+            .met-window { width: 90%; } /* Mobilde pencereler ekranı kaplasın */
+            .cb-tl, .cb-tr, .cb-bl, .cb-br { width: 15px; height: 15px; }
+            #status-bar { padding: 0 10px; font-size: 10px; }
+            .sys-logo { font-size: 12px; }
+            .main-title h1 { font-size: 28px; }
+            .main-title p { font-size: 10px; }
+            #dock-container { gap: 5px; padding: 0 5px; bottom: 5px; }
+            .dock-icon { width: 40px; height: 40px; font-size: 18px; }
         }
 
     </style>
 </head>
-<body>
-
-    <div id="boot-screen">
-        <div class="terminal-text" id="terminal-output"></div>
-        <div class="loading-bar-container">
-            <div class="loading-bar" id="progress"></div>
+<body oncontextmenu="return false;"> <div id="boot-sequence">
+        <div class="terminal-text" id="boot-logs"></div>
+        <div class="loading-container">
+            <div class="loading-progress" id="boot-progress"></div>
         </div>
     </div>
 
-    <div id="desktop">
-        <canvas id="network-canvas"></canvas>
+    <div id="met-os-desktop">
+        
+        <canvas id="desktop-canvas"></canvas>
+        
+        <div class="corner-bracket cb-tl"></div>
+        <div class="corner-bracket cb-tr"></div>
+        <div class="corner-bracket cb-bl"></div>
+        <div class="corner-bracket cb-br"></div>
+        
+        <div class="hud-line h" style="top: 50px;"></div>
+        <div class="hud-line h" style="bottom: 80px;"></div>
+        <div class="hud-line v" style="left: 20px;"></div>
+        <div class="hud-line v" style="right: 20px;"></div>
 
-        <div class="hud-corner tl"></div>
-        <div class="hud-corner tr"></div>
-        <div class="hud-corner bl"></div>
-        <div class="hud-corner br"></div>
+        <div class="system-indicators">
+            <div class="indicator-item">CORE: <span id="hud-core">MET_ENG_v2</span></div>
+            <div class="indicator-item">LOCATION: <span id="hud-loc">KOCAELI_UNI</span></div>
+            <div class="indicator-item">CPU LOAD: <span id="hud-cpu">19</span>%</div>
+            <div class="indicator-item">SYSTEM MODE: <span><i class="fas fa-star gs-star-blink"></i> CHAMPION</span></div>
+        </div>
 
-        <div class="status-bar">
-            <div class="sys-info">
-                <span>MET-OS v1.0</span>
-                <span class="blink">● ONLINE</span>
-            </div>
-            <div class="sys-info">
-                <span>CPU: <span id="cpu-val">12</span>%</span>
-                <span id="clock">00:00:00</span>
+        <div id="status-bar">
+            <div class="sys-logo">MET-OS<span style="font-family: var(--font-main); color:white; font-size:10px;"> Pro</span></div>
+            <div class="sys-clock-area">
+                <span>NETWORK: OK</span>
+                <span class="saat" id="clock-display">00:00:00</span>
             </div>
         </div>
 
-        <div class="main-title">
-            <h1>Muhammed Enes TEKİN</h1>
-            <p>ELECTRICAL ENGINEER / SYSTEM ADMIN</p>
+        <div style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5;">
+            <h1 style="font-family: var(--font-headline); font-size: 40px; color:white; text-transform: uppercase; margin:0; letter-spacing:3px;">
+                Muhammed Enes
+            </h1>
+            <p style="font-family: var(--font-main); font-size: 14px; color:var(--gs-sarisi); margin:0; letter-spacing:5px; font-weight:bold;">
+                ELECTRICAL ENGINEER / SYSTEM ARCHITECT
+            </p>
         </div>
 
-        <div class="dock-container">
-            <div class="app-icon" onclick="openWindow('win-profile')">
-                <i class="fas fa-user-astronaut"></i>
-                <span>Kimlik</span>
+        <div id="dock-container">
+            <div class="dock-icon" data-name="Kimlik" onclick="System.openApp('win-id')">
+                <i class="fas fa-fingerprint"></i>
             </div>
-            <div class="app-icon" onclick="openWindow('win-projects')">
-                <i class="fas fa-microchip"></i>
-                <span>Yetenek</span>
+            <div class="dock-icon" data-name="Yetenekler" onclick="System.openApp('win-skills')">
+                <i class="fas fa-brain"></i>
             </div>
-            <div class="app-icon" onclick="openWindow('win-contact')">
-                <i class="fas fa-satellite-dish"></i>
-                <span>İletişim</span>
+            <div class="dock-icon" data-name="İletişim" onclick="System.openApp('win-conn')">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <div class="dock-icon" data-name="Notlar" onclick="System.openApp('win-notes')">
+                <i class="fas fa-terminal"></i>
             </div>
         </div>
 
-        <div class="window" id="win-profile">
-            <div class="win-header">
-                <span><i class="fas fa-id-card"></i> KİMLİK BİLGİSİ</span>
-                <i class="fas fa-times close-btn" onclick="closeWindow('win-profile')"></i>
-            </div>
-            <div class="win-content">
-                <div class="profile-pic-large">
-                    <i class="fas fa-bolt" style="font-size: 60px; color:#FDB912;"></i>
+        <div class="met-window" id="win-id">
+            <div class="win-header" onmousedown="System.startDrag(event, 'win-id')">
+                <div class="win-title"><i class="fas fa-fingerprint"></i> Kimlik Doğrulama</div>
+                <div class="win-controls">
+                    <div class="win-btn win-min"></div>
+                    <div class="win-btn win-max"></div>
+                    <div class="win-btn win-close" onclick="System.closeApp('win-id')"></div>
                 </div>
-                <h2 style="color:white; margin:0;">M. Enes TEKİN</h2>
-                <p style="color:#A90432; font-weight:bold;">KOCAELİ ÜNİVERSİTESİ</p>
-                <p>Elektrik mühendisliği öğrencisi. Teknoloji tutkunu. Galatasaray sevdalısı.</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-val"><i class="fas fa-atom"></i></div>
-                        <div class="stat-label">TESLA (Bilim)</div>
+            </div>
+            <div class="win-body">
+                <div class="profile-section">
+                    <div class="profile-avatar-box">
+                        <div class="avatar-img-area">
+                            <i class="fas fa-bolt" style="color: var(--gs-sarisi);"></i>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-val"><i class="fas fa-futbol"></i></div>
-                        <div class="stat-label">ICARDI (Tutku)</div>
+                    <h1 class="user-name">Muhammed <span class="user-surname">Enes TEKİN</span></h1>
+                    <p class="user-title">Elektrik Mühendisi | Kocaeli Üniversitesi</p>
+                    <p class="profile-bio">
+                        Endüstriyel otomasyon, gömülü sistemler ve enerji dağıtımı üzerine uzmanlaşma hedefliyor. 
+                        Fiziğin temel yasalarını Galatasaray'ın tutkusuyla birleştiriyor.
+                    </p>
+                    
+                    <div class="badges-area">
+                        <span class="müh-badge"><i class="fas fa-microchip"></i> Otomasyon</span>
+                        <span class="müh-badge"><i class="fas fa-bolt"></i> Enerji</span>
+                        <span class="müh-badge"><i class="fas fa-code"></i> Python</span>
                     </div>
                 </div>
+                <div class="met-footer">Science & Passion • 1905</div>
             </div>
         </div>
 
-        <div class="window" id="win-projects">
-            <div class="win-header">
-                <span><i class="fas fa-code-branch"></i> SİSTEM VERİLERİ</span>
-                <i class="fas fa-times close-btn" onclick="closeWindow('win-projects')"></i>
-            </div>
-            <div class="win-content">
-                <p>Mühendislik ve Yazılım Yetkinlikleri</p>
-                
-                <div style="text-align:left; margin-top:20px;">
-                    <p style="margin-bottom:5px;">Python / AI <span style="float:right;">90%</span></p>
-                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:90%; height:100%; background:#FDB912;"></div></div>
-                    
-                    <p style="margin-bottom:5px; margin-top:15px;">Elektrik Devreleri <span style="float:right;">95%</span></p>
-                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:95%; height:100%; background:#A90432;"></div></div>
-                    
-                    <p style="margin-bottom:5px; margin-top:15px;">MATLAB / Proteus <span style="float:right;">80%</span></p>
-                    <div style="height:6px; background:#333; border-radius:3px;"><div style="width:80%; height:100%; background:#fff;"></div></div>
+        <div class="met-window" id="win-skills">
+            <div class="win-header" onmousedown="System.startDrag(event, 'win-skills')">
+                <div class="win-title"><i class="fas fa-brain"></i> Yetenek Analizi</div>
+                <div class="win-controls">
+                    <div class="win-btn win-min"></div>
+                    <div class="win-btn win-close" onclick="System.closeApp('win-skills')"></div>
                 </div>
             </div>
-        </div>
-
-        <div class="window" id="win-contact">
-            <div class="win-header">
-                <span><i class="fas fa-signal"></i> BAĞLANTI KUR</span>
-                <i class="fas fa-times close-btn" onclick="closeWindow('win-contact')"></i>
-            </div>
-            <div class="win-content">
-                <p>Aşağıdaki frekanslardan iletişime geçebilirsiniz.</p>
+            <div class="win-body">
+                <p style="font-size: 12px; color:#888; margin-bottom:20px;">Teknik yetkinlik göstergeleri simulasyonu.</p>
                 
-                <a href="https://www.instagram.com/menestekin909/" target="_blank" class="btn-action">
-                    <i class="fab fa-instagram"></i> INSTAGRAM
-                </a>
-                <a href="mailto:menestekin10@gmail.com" class="btn-action">
-                    <i class="fas fa-envelope"></i> E-MAIL
-                </a>
-                <a href="https://github.com" target="_blank" class="btn-action">
-                    <i class="fab fa-github"></i> GITHUB
-                </a>
+                <div class="skill-group">
+                    <div class="skill-label">Python / Yapay Zeka <span class="percent">85%</span></div>
+                    <div class="progress-track"><div class="progress-fill" data-percent="85"></div></div>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-label">Elektrik Devre Tasarımı <span class="percent">90%</span></div>
+                    <div class="progress-track"><div class="progress-fill" data-percent="90"></div></div>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-label">MATLAB / Proteus <span class="percent">80%</span></div>
+                    <div class="progress-track"><div class="progress-fill" data-percent="80"></div></div>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-label">Otomasyon (PLC) <span class="percent">75%</span></div>
+                    <div class="progress-track"><div class="progress-fill" data-percent="75"></div></div>
+                </div>
+                
+                <div class="met-footer">v2.1 Skill Check OK.</div>
             </div>
         </div>
 
-    </div>
+        <div class="met-window" id="win-conn">
+            <div class="win-header" onmousedown="System.startDrag(event, 'win-conn')">
+                <div class="win-title"><i class="fas fa-satellite-dish"></i> Bağlantı Merkezi</div>
+                <div class="win-controls">
+                    <div class="win-btn win-min"></div>
+                    <div class="win-btn win-close" onclick="System.closeApp('win-conn')"></div>
+                </div>
+            </div>
+            <div class="win-body">
+                <p style="font-size: 12px; color:#888; margin-bottom:20px;">Sistem yöneticisi ile bağlantı kurun.</p>
+                
+                <div class="connection-list">
+                    <a href="https://www.instagram.com/menestekin909/" target="_blank" class="conn-btn btn-instagram">
+                        <div class="conn-btn-left"><i class="fab fa-instagram icon"></i> Instagram</div>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </a>
+                    
+                    <a href="mailto:menestekin10@gmail.com" class="conn-btn btn-mail">
+                        <div class="conn-btn-left"><i class="fas fa-envelope icon"></i> menestekin10@gmail.com</div>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </a>
+                    
+                    <a href="https://github.com" target="_blank" class="conn-btn btn-github">
+                        <div class="conn-btn-left"><i class="fab fa-github icon"></i> GitHub Projeleri</div>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </a>
+                </div>
+                <div class="met-footer">E-Link Protokol v1.0</div>
+            </div>
+        </div>
 
-    <script>
-        // --- 1. BOOT SEQUENCE (AÇILIŞ YAZILARI) ---
-        const terminal = document.getElementById('terminal-output');
-        const progressBar = document.getElementById('progress');
-        const bootScreen = document.getElementById('boot-screen');
-        const desktop = document.getElementById('desktop');
+        <div class="met-window" id="win-notes">
+            <div class="win-header" onmousedown="System.startDrag(event, 'win-notes')">
+                <div class="win-title"><i class="fas fa-code"></i> Sistem Notları</div>
+                <div class="win-controls">
+                    <div class="win-btn win-close" onclick="System.closeApp('win-notes')"></div>
+                </div>
+            </div>
+            <div class="win-body">
+                <div class="note-box">
+                    > 1000 SATIR MEYDAN OKUMASI: Tamamlandı.<br>
+                    Sistem Pro Edition sürümüne yükseltildi. Neon GS teması entegre edildi.
+                </div>
+                <div class="note-box red">
+                    > GÖREV: Kocaeli Üniversitesi Mühendislik Fakültesi.<br>
+                    Otomasyon projesinin Python AI modülü geliştirilecek.
+                </div>
+                <div class="note-box">
+                    > REFERANS 01: Nikola Tesla<br>
+                    > REFERANS 02: Mauro Icardi
+                </div>
+                <div class="met-footer">Log v1.1 • All rights reserved</div>
+            </div>
+        </div>
 
-        const logs = [
-            "System initializing...",
-            "Loading Kernel: MET-OS v1.0",
-            "Checking Memory... OK",
-            "Connecting to Kocaeli University Server...",
-            "Loading Modules: Tesla_Physics.lib",
-            "Loading Modules: Icardi_Striker.exe",
-            "Configuring Neural Networks...",
-            "Access Granted. Welcome User."
+    </div> <script>
+        
+        // --- A. GLOBAL SİSTEM DEĞİŞKENLERİ ---
+        const BOOT_LOGS_ELEMENT = document.getElementById('boot-logs');
+        const BOOT_PROGRESS_BAR = document.getElementById('boot-progress');
+        const BOOT_SCREEN_ELEMENT = document.getElementById('boot-sequence');
+        const DESKTOP_ELEMENT = document.getElementById('met-os-desktop');
+        
+        // Bozuk link sorunu için cila
+        const ICARDI_LINK = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mauro_Icardi_2019.jpg/600px-Mauro_Icardi_2019.jpg?v=GS1905";
+
+        // --- B. BOOT SEQUENCE LOGLARI (Mühendislik Temalı) ---
+        const BOOT_LOGS_DATA = [
+            { t: "MET-OS Çekirdeği yükleniyor...", d: 300 },
+            { t: "Sistem Mimarisi: Kocaeli Üniversitesi Özel Sürümü", d: 200 },
+            { t: "Hafıza Kontrolü Yapılıyor: <span class='info-text'>1905 MB</span> RAM... OK", d: 400 },
+            { t: "Mühendislik Protokolleri Yükleniyor...", d: 200 },
+            { t: "> <span class='succes-text'>AC_Motor_Sürücü.lib</span> aktif.", d: 100 },
+            { t: "> <span class='succes-text'>Arduino_Gömülü.exe</span> aktif.", d: 100 },
+            { t: "> <span class='succes-text'>Circuit_Sim_Proteus</span> aktif.", d: 100 },
+            { t: "> <span class='succes-text'>Matlab_Math.lib</span> aktif.", d: 100 },
+            { t: "Ağ Bağlantısı Kuruluyor... [menestekin909]", d: 500 },
+            { t: "Dış Modüller Yüklendi:", d: 100 },
+            { t: "> Tesla_Bilim_Protokolü: <span class='succes-text'>ON</span>", d: 100 },
+            { t: "> Icardi_Forvet_Protokolü: <span class='succes-text'>ON</span>", d: 100 },
+            { t: "Sistem Renkleri Ayarlanıyor: <span class='succes-text'>Sarı</span> & <span class='succes-text'>Kırmızı</span> neon.", d: 300 },
+            { t: "HOŞGELDİNİZ M. ENES TEKİN.", d: 200 },
+            { t: "Sistem Çevrimiçi.", d: 400 }
         ];
 
-        let logIndex = 0;
-        
-        function typeLogs() {
-            if (logIndex < logs.length) {
-                terminal.innerHTML += `> ${logs[logIndex]}<br>`;
-                progressBar.style.width = `${(logIndex + 1) * (100 / logs.length)}%`;
-                logIndex++;
-                setTimeout(typeLogs, 300); // Yazı hızı
-            } else {
-                setTimeout(bootComplete, 800);
-            }
-        }
-
-        function bootComplete() {
-            bootScreen.style.opacity = '0';
-            setTimeout(() => {
-                bootScreen.style.display = 'none';
-                desktop.style.opacity = '1';
-                initParticles(); // Masaüstü gelince partikülleri başlat
-            }, 1000);
-        }
-
-        // Başlat
-        window.onload = typeLogs;
-
-
-        // --- 2. SAAT VE CPU SİMÜLASYONU ---
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-            
-            // Rastgele CPU Değeri
-            if(Math.random() > 0.5) {
-                const cpu = Math.floor(Math.random() * 30) + 10;
-                document.getElementById('cpu-val').innerText = cpu;
-            }
-        }
-        setInterval(updateClock, 1000);
-
-
-        // --- 3. PENCERE YÖNETİMİ ---
-        function openWindow(id) {
-            // Önce tüm pencereleri kapat
-            const windows = document.querySelectorAll('.window');
-            windows.forEach(w => w.classList.remove('open'));
-            
-            // Seçileni aç
-            document.getElementById(id).classList.add('open');
-        }
-
-        function closeWindow(id) {
-            document.getElementById(id).classList.remove('open');
-        }
-
-
-        // --- 4. CANVAS PARTİKÜL EFEKTİ (ELEKTRİK AĞI) ---
-        function initParticles() {
-            const canvas = document.getElementById('network-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            let particles = [];
-            const particleCount = 50; // Parçacık sayısı
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 1;
-                    this.vy = (Math.random() - 0.5) * 1;
-                    this.size = 2;
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                }
-                draw() {
-                    ctx.fillStyle = '#A90432'; // Kırmızı Noktalar
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+        // --- C. ANA SİSTEM YÖNETİCİSİ (JS CLASS) ---
+        class MET_OS {
+            constructor() {
+                this.currentZIndex = 100; // Pencerelerin üst üste binme sırası
+                this.isDragging = false; // Sürükleme durumu
+                this.draggedWindow = null; // Sürüklenen pencere
+                this.dragOffset = { x: 0, y: 0 }; // Tıklama ofseti
             }
 
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+            // 1. Sistemi Başlat (Boot)
+            init() {
+                console.log("MET-OS v2.1 Pro Çekirdeği Başlatılıyor...");
+                this.runBootSequence(0);
+                this.initClock();
+                this.initHudIndicators();
+            }
 
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update();
-                    particles[i].draw();
+            // 2. Boot Animasyonu
+            runBootSequence(index) {
+                if (index < BOOT_LOGS_DATA.length) {
+                    const log = BOOT_LOGS_DATA[index];
+                    BOOT_LOGS_ELEMENT.innerHTML += `> ${log.t}<br>`;
                     
-                    // Bağlantı Çizgileri
-                    for (let j = i; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
+                    // Progress barı doldur
+                    const progressPercent = ((index + 1) / BOOT_LOGS_DATA.length) * 100;
+                    BOOT_PROGRESS_BAR.style.width = `${progressPercent}%`;
+                    
+                    // Sayfayı otomatik aşağı kaydır (Terminal efekti)
+                    BOOT_SCREEN_ELEMENT.scrollTop = BOOT_SCREEN_ELEMENT.scrollHeight;
+                    
+                    // Sonraki loga geç (Gecikmeli)
+                    setTimeout(() => {
+                        this.runBootSequence(index + 1);
+                    }, log.d);
+                } else {
+                    // Boot tamamlandı
+                    this.bootComplete();
+                }
+            }
 
-                        if (distance < 150) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(253, 185, 18, ${1 - distance / 150})`; // Sarı Çizgiler
-                            ctx.lineWidth = 0.5;
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
+            // 3. Boot Tamamlanınca Desktop'ı Aç
+            bootComplete() {
+                setTimeout(() => {
+                    BOOT_SCREEN_ELEMENT.style.opacity = '0';
+                    setTimeout(() => {
+                        BOOT_SCREEN_ELEMENT.style.display = 'none';
+                        DESKTOP_ELEMENT.style.opacity = '1';
+                        this.initCanvasNetwork(); // Masaüstü açılınca arka plan animasyonu başlasın
+                    }, 1000);
+                }, 500);
+            }
+
+            // 4. Uygulama Aç (Pencere Yönetimi)
+            openApp(windowId) {
+                const win = document.getElementById(windowId);
+                if (win) {
+                    // Z-Indexi arttır (En üste getir)
+                    this.currentZIndex++;
+                    win.style.zIndex = this.currentZIndex;
+                    
+                    // Pencereyi görünür yap
+                    win.classList.add('window-open');
+                    this.setActiveWindow(win);
+
+                    // Eğer yetenekler penceresi ise bar animasyonunu başlat
+                    if (windowId === 'win-skills') {
+                        this.animateSkillBars();
+                    }
+                }
+            }
+
+            // 5. Uygulama Kapat
+            closeApp(windowId) {
+                const win = document.getElementById(windowId);
+                if (win) {
+                    win.classList.remove('window-open');
+                    win.classList.remove('window-active');
+                }
+            }
+
+            // 6. Aktif Pencereyi İşaretle (Sarı Çerçeve)
+            setActiveWindow(activeWin) {
+                // Diğer pencerelerden aktifliği kaldır
+                document.querySelectorAll('.met-window').forEach(w => {
+                    w.classList.remove('window-active');
+                });
+                // Buna ekle
+                activeWin.classList.add('window-active');
+            }
+
+            // 7. PENCERE SÜRÜKLEME BAŞLAT (MOUSE DOWN)
+            startDrag(e, windowId) {
+                e.preventDefault();
+                this.isDragging = true;
+                this.draggedWindow = document.getElementById(windowId);
+                
+                // Bu pencereyi en üste getir
+                this.currentZIndex++;
+                this.draggedWindow.style.zIndex = this.currentZIndex;
+                this.setActiveWindow(this.draggedWindow);
+
+                // Pencere "translate(-50%, -50%)" ile ortalı olduğu için
+                // Koordinat hesaplaması biraz farklıdır.
+                const winRect = this.draggedWindow.getBoundingClientRect();
+                
+                // Tıklamanın pencere içindeki ofsetini bul
+                // Mobilde e.clientX yok, touch eventleri farklıdır ama mobilde sürüklemeyi pas geçiyoruz.
+                if (e.clientX) {
+                    this.dragOffset.x = e.clientX - winRect.left;
+                    this.dragOffset.y = e.clientY - winRect.top;
+                }
+                
+                // Pencere animasyonunu sürüklerken kapat (Daha akıcı)
+                this.draggedWindow.style.transition = 'none';
+            }
+
+            // 8. SÜRÜKLEME DEVAM ET (MOUSE MOVE) - Global Olay
+            drag(e) {
+                if (this.isDragging && this.draggedWindow) {
+                    // translate(-50%, -50%)'den dolayı hesaplama:
+                    // (Mouse_Pozisyonu - Ofset - Kartın_Yarısı) + (EkranınYarısı?) 
+                    // Hayır, basit yöntem: transform'u kaldırıp top/left ile yönetmek.
+                    
+                    // Profesyonel Yöntem: translate(-50%, -50%)'yi hesaba katarak top/left set etmek.
+                    // translate(-50%) demek, aslında elementin LEFT değerinden GENİŞLİĞİNİN YARISINI çıkarır.
+                    // Biz LEFT set ederken elementin GENİŞLİĞİNİN YARISINI eklemeliyiz.
+                    
+                    const winWidth = this.draggedWindow.offsetWidth;
+                    const winHeight = this.draggedWindow.offsetHeight;
+
+                    let newX = e.clientX - this.dragOffset.x + (winWidth / 2);
+                    let newY = e.clientY - this.dragOffset.y + (winHeight / 2);
+
+                    // Ekran Sınırları Kontrolü (Pencere taşmasın)
+                    if(newX < (winWidth/2)) newX = winWidth/2;
+                    if(newX > (window.innerWidth - winWidth/2)) newX = window.innerWidth - winWidth/2;
+                    if(newY < (winHeight/2)) newY = winHeight/2;
+                    if(newY > (window.innerHeight - winHeight/2)) newY = window.innerHeight - winHeight/2;
+
+                    this.draggedWindow.style.left = `${newX}px`;
+                    this.draggedWindow.style.top = `${newY}px`;
+                }
+            }
+
+            // 9. SÜRÜKLEMEYİ BİTİR (MOUSE UP) - Global Olay
+            stopDrag() {
+                if (this.isDragging && this.draggedWindow) {
+                    this.isDragging = false;
+                    // Animasyonu geri aç
+                    this.draggedWindow.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    this.draggedWindow = null;
+                }
+            }
+
+            // 10. Saat ve Tarih
+            initClock() {
+                const clockElement = document.getElementById('clock-display');
+                function update() {
+                    const now = new Date();
+                    // HH:MM:SS formatı
+                    const timeString = now.toLocaleTimeString('tr-TR');
+                    clockElement.innerText = timeString;
+                }
+                update(); // Hemen çalıştır
+                setInterval(update, 1000); // Saniyede bir güncelle
+            }
+
+            // 11. Sahte HUD İndikatörleri (Sağ Alt)
+            initHudIndicators() {
+                const cpuElement = document.getElementById('hud-cpu');
+                setInterval(() => {
+                    // Rastgele CPU değeri %15-%25 arası (Havalıcılık)
+                    const sahteCpu = Math.floor(Math.random() * 10) + 15;
+                    cpuElement.innerText = sahteCpu;
+                }, 2000);
+            }
+
+            // 12. Yetenek Barlarını Doldur (Açılınca)
+            animateSkillBars() {
+                // Progress bar filleri bul
+                const fills = document.querySelectorAll('.progress-fill');
+                fills.forEach(fill => {
+                    // data-percent özelliğinden değeri oku
+                    const percent = fill.getAttribute('data-percent');
+                    // Başlangıçta genişliği 0 yap
+                    fill.style.width = '0%';
+                    // Küçük bir gecikme ile (Pencere animasyonundan sonra) doldur
+                    setTimeout(() => {
+                        fill.style.width = `${percent}%`;
+                    }, 200);
+                });
+            }
+
+            // 13. CANVAS PARTİKÜL ANİMASYONU (ELEKTRİK AĞI) - DEV KOD
+            initCanvasNetwork() {
+                const canvas = document.getElementById('desktop-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Canvas boyutunu ekran yap
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                // Ayarlar
+                let particlesArray = [];
+                const numberOfParticles = Math.floor((canvas.width * canvas.height) / 9000); // Ekrana göre sayı
+                const connectionDistance = 150; // Çizgi çekme mesafesi
+                const particleColor = '#A90432'; // GS Kırmızısı Noktalar
+                const lineColor = 'rgba(253, 185, 18,'; // GS Sarısı Çizgiler (Opasite sonda eklenecek)
+
+                // Mouse Etkileşim Alanı
+                let mouse = { x: null, y: null, radius: 100 };
+                window.addEventListener('mousemove', (e) => {
+                    mouse.x = e.x;
+                    mouse.y = e.y;
+                });
+
+                // Partikül Sınıfı (Özel Mühendislik Çizimi)
+                class Particle {
+                    constructor(x, y, directionX, directionY, size) {
+                        this.x = x; this.y = y;
+                        this.directionX = directionX; this.directionY = directionY;
+                        this.size = size;
+                    }
+                    // Çiz
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                        ctx.fillStyle = particleColor;
+                        ctx.fill();
+                    }
+                    // Hareket Et ve Duvarlara Çarpma Kontrolü
+                    update() {
+                        // Kenara çarpınca yön değiştir (Mühendislik Hesabı)
+                        if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                        if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+                        // Mouse'dan Kaçma Efekti (Etkileşim)
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (distance < mouse.radius + this.size) {
+                            // Mouse'a çok yakınsa geri it
+                            if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 3;
+                            if (mouse.x > this.x && this.x > this.size * 10) this.x -= 3;
+                            if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 3;
+                            if (mouse.y > this.y && this.y > this.size * 10) this.y -= 3;
+                        }
+                        
+                        // Normal Hareket
+                        this.x += this.directionX;
+                        this.y += this.directionY;
+                        this.draw(); // Çiz
+                    }
+                }
+
+                // Ağda partikülleri oluştur
+                function init() {
+                    particlesArray = [];
+                    for (let i = 0; i < numberOfParticles; i++) {
+                        // Rastgele boy, yer ve hız (Elektrik gürültüsü simülasyonu)
+                        let size = (Math.random() * 2) + 1;
+                        let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                        let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                        let directionX = (Math.random() * 1) - 0.5; // Yavaş hız
+                        let directionY = (Math.random() * 1) - 0.5;
+                        
+                        particlesArray.push(new Particle(x, y, directionX, directionY, size));
+                    }
+                }
+
+                // Animasyon Döngüsü (Dönme ve Çizgi Çekme)
+                function animate() {
+                    requestAnimationFrame(animate);
+                    ctx.clearRect(0, 0, innerWidth, innerHeight); // Temizle
+
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                    }
+                    
+                    // --- [ BAĞLANTI ÇİZGİLERİNİ ÇİZ ] --- (Mühendislik Ağ Grafiği)
+                    for (let a = 0; a < particlesArray.length; a++) {
+                        for (let b = a; b < particlesArray.length; b++) {
+                            // İki partikül arasındaki mesafe (Pythagoras Teoremi - Mühendislik Temeli)
+                            let dx = particlesArray[a].x - particlesArray[b].x;
+                            let dy = particlesArray[a].y - particlesArray[b].y;
+                            let distance = (dx * dx) + (dy * dy);
+
+                            // Eğer yeterince yakınlarsa çizgi çek
+                            if (distance < (canvas.width/9) * (canvas.height/9)) {
+                                // Mesafe arttıkça çizgi silikleşsin (Opasite Hesabı)
+                                let opacityValue = 1 - (distance / 15000);
+                                ctx.strokeStyle = lineColor + opacityValue + ')'; // Sarı çizgi + opasite
+                                ctx.lineWidth = 0.5;
+                                ctx.beginPath();
+                                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                                ctx.stroke();
+                            }
                         }
                     }
                 }
-                requestAnimationFrame(animate);
+
+                // Başlat ve Boyut Değişirse Sıfırla olayları
+                init(); animate();
+                window.addEventListener('resize', () => {
+                    canvas.width = innerWidth; canvas.height = innerHeight;
+                    init(); // Partikülleri yeniden oluştur
+                });
             }
-            animate();
         }
+
+        // --- D. SİSTEMİ BAŞLAT (GLOBAL GLOBAL ALAN) ---
+        const System = new MET_OS();
+        
+        // Sayfa yüklenince çekirdek başlasın
+        document.addEventListener('DOMContentLoaded', () => {
+            System.init();
+        });
+
+        // Sürükleme için global mouse olayları
+        document.addEventListener('mousemove', (e) => {
+            System.drag(e);
+        });
+        document.addEventListener('mouseup', () => {
+            System.stopDrag();
+        });
+
+        // Gelişmiş Dokunmatik Cihaz Uyarıları (Deneysel)
+        document.addEventListener('touchend', () => {
+            // Mobilde pencereleri en üste getirmek için (sürükleme pas geçilir)
+            if (System.isDragging) {
+                System.stopDrag();
+            }
+        });
 
     </script>
 </body>
